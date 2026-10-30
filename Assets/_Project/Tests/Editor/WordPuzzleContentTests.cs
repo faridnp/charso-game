@@ -53,6 +53,20 @@ namespace Charso.Tests
         }
 
         [Test]
+        public void FullClearCoinEarningsMatchTheDraftCityProjectBudget()
+        {
+            int extendedCoins = 0;
+            for (int i = 20; i < WordPuzzle.Levels.Length; i++)
+                extendedCoins += RewardEconomy.PuzzleReward(WordPuzzle.Levels[i].Difficulty);
+            Assert.AreEqual(1730, extendedCoins);
+            int projectCosts = 0;
+            foreach (CityProjectDefinition project in RewardEconomy.CityProjects)
+                projectCosts += project.CoinCost;
+            Assert.AreEqual(1770, projectCosts);
+            Assert.AreEqual(1890, extendedCoins + (20 * 8));
+        }
+
+        [Test]
         public void RestorationMilestonesAreLimitedToThreeVisibleTransitions()
         {
             for (int i = 0; i < WordPuzzle.Levels.Length; i++)
