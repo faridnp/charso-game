@@ -32,7 +32,7 @@ SECRET_PATTERNS = (
     re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     re.compile(r"(?i)service[_-]?role[_-]?key\s*[:=]\s*['\"][^'\"]{12,}"),
 )
-CONFLICT_MARKERS = ("<<<<<<< ", ">>>>>>> ", "=======")
+CONFLICT_MARKERS = ("<" * 7 + " ", ">" * 7 + " ", "=" * 7)
 
 
 def check_required_files(errors: list[str]) -> None:
