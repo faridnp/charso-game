@@ -2,7 +2,7 @@ name: Repository quality gates
 
 on:
   push:
-    branches: [main, "docs/**", "feature/**", "fix/**", "test/**"]
+    branches: [main, "docs/**", "feature/**", "fix/**", "test/**", "production/**"]
   pull_request:
   workflow_dispatch:
 
