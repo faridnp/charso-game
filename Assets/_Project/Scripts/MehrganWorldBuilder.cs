@@ -97,6 +97,7 @@ namespace Charso
             }
             Cylinder(p,"Fountain basin",new Vector3(0,.42f,1),new Vector3(2.35f,.38f,2.35f),Tile,32);
             Cylinder(p,"Fountain inner pool",new Vector3(0,.63f,1),new Vector3(1.78f,.08f,1.78f),Water,32);
+            Sphere(p,"Fountain water shimmer",new Vector3(0,.73f,1),new Vector3(.9f,.025f,.9f),TileLight);
             Cylinder(p,"Fountain central bowl",new Vector3(0,.88f,1),new Vector3(.7f,.3f,.7f),LightStone,24);
             Cylinder(p,"Fountain finial",new Vector3(0,1.18f,1),new Vector3(.2f,.38f,.2f),TileLight,16);
             for(int i=0;i<4;i++)
