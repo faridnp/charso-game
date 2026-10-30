@@ -7,8 +7,8 @@ using UnityEngine.UI;
 namespace Charso {
  public sealed class CharsoGameBootstrap:MonoBehaviour {
   PlayerProgress p; readonly List<int> picks=new List<int>(); readonly List<Button> letterButtons=new List<Button>();
-  Text coins,clue,answer,status,stage; Transform letters; Button submit,hint,restore,next; int solvedIndex=-1; bool restored;
-  void Awake(){Application.targetFrameRate=60;p=SaveSystem.Load();MehrganWorldBuilder.Build(p.RestorationStage);EnsureEventSystem();solvedIndex=p.CurrentLevelSolved?p.LevelIndex:-1;restored=p.CurrentLevelRestored;BuildUI();Refresh();}
+  Text coins,clue,answer,status,stage; Transform letters; Button submit,hint,restore,next,cityShop; GameObject cityShopPanel; Text cityShopBalance; readonly List<Button> cityProjectButtons=new List<Button>(); int solvedIndex=-1; bool restored;
+  void Awake(){Application.targetFrameRate=60;p=SaveSystem.Load();MehrganWorldBuilder.Build(p.RestorationStage);MehrganWorldBuilder.ApplyCityProjects(p.OwnedCityProjectIds);EnsureEventSystem();solvedIndex=p.CurrentLevelSolved?p.LevelIndex:-1;restored=p.CurrentLevelRestored;BuildUI();Refresh();}
   void BuildUI(){
    var c=new GameObject("Canvas",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster)).GetComponent<Canvas>();c.renderMode=RenderMode.ScreenSpaceOverlay;
    var sc=c.GetComponent<CanvasScaler>();sc.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;sc.referenceResolution=new Vector2(720,1280);sc.matchWidthOrHeight=.55f;
@@ -17,7 +17,7 @@ namespace Charso {
    var title=Label(safe,"چهارسو",54,new Color32(22,65,105,255));Place(title.rectTransform,.06f,.88f,.94f,.97f);
    var sub=Label(safe,"ماجرای واژه‌ها و میراث ایران",24,new Color32(73,104,132,255));Place(sub.rectTransform,.06f,.83f,.94f,.89f);
    var stats=Panel(safe,"Stats",Color.white);Place(stats.GetComponent<RectTransform>(),.07f,.755f,.93f,.82f);
-   coins=Label(stats.transform,"",28,new Color32(150,103,20,255));Place(coins.rectTransform,.08f,.02f,.78f,.98f);AddIcon(stats.transform,CharsoIcon.Coin,.82f,.16f,.94f,.84f);
+   coins=Label(stats.transform,"",26,new Color32(150,103,20,255));Place(coins.rectTransform,.04f,.02f,.52f,.98f);AddIcon(stats.transform,CharsoIcon.Coin,.48f,.16f,.57f,.84f);cityShop=Btn(stats.transform,"بازار شهر",new Color32(38,132,102,255),Color.white,19);Place(cityShop.GetComponent<RectTransform>(),.62f,.08f,.97f,.92f);cityShop.onClick.AddListener(OpenCityShop);
    var card=Panel(safe,"Puzzle",Color.white);Place(card.GetComponent<RectTransform>(),.055f,.40f,.945f,.735f);
    var heading=Label(card.transform,"مرحله واژه",28,new Color32(30,78,120,255));Place(heading.rectTransform,.05f,.83f,.95f,.98f);
    clue=Label(card.transform,"",26,new Color32(45,57,68,255));Place(clue.rectTransform,.05f,.63f,.95f,.83f);
@@ -34,7 +34,82 @@ namespace Charso {
    var note=Label(heritage.transform,"بنای منتخب این محله هنوز در مرحله تحقیق تاریخی و بررسی مجوزهاست.",17,new Color32(69,85,98,255));Place(note.rectTransform,.05f,.20f,.95f,.49f);
    restore=Btn(heritage.transform,"اجرای گام بازسازی (۱۰ سکه)",new Color32(38,132,102,255),Color.white,20);Place(restore.GetComponent<RectTransform>(),.10f,.01f,.90f,.20f);restore.onClick.AddListener(Restore);DecorateButton(restore,CharsoIcon.Home);
    var foot=Label(safe,"نسخه آزمایشی ۰.۱ • شهر مهرگان",16,new Color32(107,124,139,255));Place(foot.rectTransform,.06f,.012f,.94f,.05f);
+   BuildCityShopPanel(safe);
   }
+  void BuildCityShopPanel(Transform safe)
+  {
+   cityShopPanel=Panel(safe,"CityShopOverlay",new Color32(24,39,52,225));
+   Place(cityShopPanel.GetComponent<RectTransform>(),.045f,.10f,.955f,.86f);
+   var heading=Label(cityShopPanel.transform,"بازار بازسازی مهرگان",28,new Color32(25,65,96,255));
+   Place(heading.rectTransform,.06f,.88f,.94f,.98f);
+   var close=Btn(cityShopPanel.transform,"بستن",new Color32(225,233,240,255),new Color32(45,72,96,255),18);
+   Place(close.GetComponent<RectTransform>(),.72f,.89f,.94f,.98f);
+   close.onClick.AddListener(()=>cityShopPanel.SetActive(false));
+   cityShopBalance=Label(cityShopPanel.transform,"",21,new Color32(150,103,20,255));
+   Place(cityShopBalance.rectTransform,.06f,.81f,.94f,.88f);
+   var rows=new GameObject("ProjectRows",typeof(RectTransform)).transform;
+   rows.SetParent(cityShopPanel.transform,false);
+   Place(rows.GetComponent<RectTransform>(),.04f,.06f,.96f,.79f);
+   for(int i=0;i<RewardEconomy.CityProjects.Length;i++)
+   {
+    CityProjectDefinition project=RewardEconomy.CityProjects[i];
+    int index=i;
+    float top=.98f-index*.122f;
+    float bottom=top-.105f;
+    var button=Btn(rows,"",new Color32(226,239,249,255),new Color32(26,73,108,255),18);
+    Place(button.GetComponent<RectTransform>(),.015f,bottom,.985f,top);
+    button.onClick.AddListener(()=>BuyCityProject(project.Id));
+    cityProjectButtons.Add(button);
+   }
+   cityShopPanel.SetActive(false);
+  }
+
+  void OpenCityShop(){RefreshCityShop();cityShopPanel.SetActive(true);}
+
+  void RefreshCityShop()
+  {
+   if(cityShopBalance!=null)cityShopBalance.text="موجودی تو: "+p.Coins+" سکه";
+   for(int i=0;i<cityProjectButtons.Count&&i<RewardEconomy.CityProjects.Length;i++)
+   {
+    CityProjectDefinition project=RewardEconomy.CityProjects[i];
+    bool owned=Array.IndexOf(p.OwnedCityProjectIds??Array.Empty<string>(),project.Id)>=0;
+    var label=cityProjectButtons[i].GetComponentInChildren<Text>();
+    if(label!=null)label.text=owned?(project.DisplayName+" — بازسازی شده"):(project.DisplayName+" — "+project.CoinCost+" سکه");
+    cityProjectButtons[i].interactable=!owned&&p.Coins>=project.CoinCost;
+    var colors=cityProjectButtons[i].colors;
+    colors.normalColor=owned?new Color32(194,220,205,255):new Color32(226,239,249,255);
+    cityProjectButtons[i].colors=colors;
+   }
+  }
+
+  void BuyCityProject(string projectId)
+  {
+   var candidate=new SaveGameData
+   {
+    SchemaVersion=3,LevelIndex=p.LevelIndex,SoftCurrency=p.Coins,
+    RestorationStage=p.RestorationStage,SolvedLevels=p.SolvedLevels,
+    CurrentLevelSolved=p.CurrentLevelSolved,CurrentLevelRestored=p.CurrentLevelRestored,
+    LastCompletedPuzzleId=p.LastCompletedPuzzleId,
+    AppliedTransactionIds=p.AppliedTransactionIds,
+    OwnedCityProjectIds=p.OwnedCityProjectIds
+   };
+   if(!CityProjectSystem.TryPurchase(candidate,projectId,out string error)){status.text=error;RefreshCityShop();return;}
+   var nextProgress=new PlayerProgress
+   {
+    SchemaVersion=3,LevelIndex=p.LevelIndex,Coins=candidate.SoftCurrency,
+    RestorationStage=p.RestorationStage,SolvedLevels=p.SolvedLevels,
+    CurrentLevelSolved=p.CurrentLevelSolved,CurrentLevelRestored=p.CurrentLevelRestored,
+    LastCompletedPuzzleId=p.LastCompletedPuzzleId,
+    AppliedTransactionIds=candidate.AppliedTransactionIds,
+    OwnedCityProjectIds=candidate.OwnedCityProjectIds
+   };
+   if(!SaveSystem.Store(nextProgress)){status.text="ذخیره بازسازی انجام نشد؛ سکه‌ها کم نشدند. دوباره تلاش کن.";return;}
+   p=nextProgress;
+   MehrganWorldBuilder.ApplyCityProjects(p.OwnedCityProjectIds);
+   Refresh();RefreshCityShop();
+   status.text="بازسازی "+RewardEconomy.CityProjects[Array.FindIndex(RewardEconomy.CityProjects,x=>x.Id==projectId)].DisplayName+" با موفقیت انجام شد.";
+  }
+
   void Refresh(){var l=WordPuzzle.Levels[p.LevelIndex];coins.text="سکه: "+p.Coins;clue.text="معمای "+(p.LevelIndex+1)+" از "+WordPuzzle.Levels.Length+" — "+l.Clue;answer.text=picks.Count==0?"؟":JoinPicks();stage.text="پیشرفت بازسازی مهرگان: "+p.RestorationStage+" از ۳";BuildLetters(l);bool solved=solvedIndex==p.LevelIndex;bool milestone=WordPuzzle.RequiresRestoration(p.LevelIndex);submit.interactable=!solved;hint.interactable=!solved&&p.Coins>=3;restore.gameObject.SetActive(milestone);restore.interactable=solved&&milestone&&!restored&&p.Coins>=10;next.gameObject.SetActive(solved&&restored&&p.LevelIndex<WordPuzzle.Levels.Length-1);status.text=solved?(restored?(p.LevelIndex==WordPuzzle.Levels.Length-1?"آفرین! فصل نخست مهرگان را کامل کردی.":"آفرین! برای ادامه، معمای بعدی را انتخاب کن."):"پنج معما کامل شد؛ حالا مرحله بازسازی این بخش را اجرا کن."):"حروف را به ترتیب انتخاب کن و پاسخ را بررسی کن.";}
   void BuildLetters(PuzzleLevel l){foreach(Transform t in letters)Destroy(t.gameObject);letterButtons.Clear();float w=.90f/l.Letters.Length;for(int i=0;i<l.Letters.Length;i++){int idx=i;var b=Btn(letters,l.Letters[i],new Color32(226,239,249,255),new Color32(26,73,108,255),32);float x=.05f+i*w;Place(b.GetComponent<RectTransform>(),x,.08f,x+w-.02f,.92f);b.onClick.AddListener(()=>Pick(idx));letterButtons.Add(b);}}
   void Pick(int i){if(solvedIndex==p.LevelIndex||picks.Count>=WordPuzzle.Levels[p.LevelIndex].Letters.Length)return;picks.Add(i);letterButtons[i].interactable=false;answer.text=JoinPicks();}
