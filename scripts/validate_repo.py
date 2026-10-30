@@ -27,6 +27,7 @@ REQUIRED_FILES = (
     "docs/SECURITY_THREAT_MODEL.md",
     "docs/ART_DIRECTION.md",
     "docs/RTL_TEXT_PIPELINE.md",
+    "docs/HERITAGE_RESEARCH/HAFEZIEH.md",
     ".github/CODEOWNERS",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/workflows/quality-gates.yml",
