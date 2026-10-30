@@ -45,6 +45,7 @@ namespace Charso
             BuildCityEdgeAndGate();
             BuildLandmarkDistrict(restorationStage);
             BuildVegetation();
+            BuildCityProjectVisuals();
             BuildLightingAndCamera();
             ApplyRestorationStage(restorationStage);
             if(root.GetComponent<MehrganAmbientAnimator>()==null)root.gameObject.AddComponent<MehrganAmbientAnimator>();
@@ -61,6 +62,84 @@ namespace Charso
             {
                 var item = site.transform.Find("RestorationStage_" + i);
                 if (item != null) item.gameObject.SetActive(i == stage);
+            }
+        }
+
+        static void BuildCityProjectVisuals()
+        {
+            var fountain = ProjectGroup("fountain");
+            Cylinder(fountain, "Restored fountain outer rim", new Vector3(0,.86f,1), new Vector3(2.65f,.16f,2.65f), LightStone, 32);
+            Cylinder(fountain, "Restored fountain water", new Vector3(0,.96f,1), new Vector3(1.92f,.07f,1.92f), Water, 32);
+            Cylinder(fountain, "Restored fountain upper bowl", new Vector3(0,1.13f,1), new Vector3(.86f,.22f,.86f), TileLight, 24);
+            Sphere(fountain, "Restored fountain finial", new Vector3(0,1.36f,1), new Vector3(.24f,.3f,.24f), LightStone);
+
+            var bazaar = ProjectGroup("bazaar");
+            for(int row=0;row<2;row++) for(int i=0;i<7;i++)
+            {
+                float x=-9+i*3, z=-9.2f+row*4.5f;
+                Box(bazaar,"Renewed bazaar canopy",new Vector3(x,3.28f,z),new Vector3(2.9f,.12f,4.05f),row==0?Tile:TileLight);
+                var lantern=BuildLantern(bazaar,new Vector3(x,2.55f,z+(row==0?-1.5f:1.5f)));
+                lantern.name="Bazaar restored lantern";
+            }
+
+            var garden = ProjectGroup("garden");
+            for(int i=0;i<6;i++)
+            {
+                float x=-13.2f+(i%3)*4.2f, z=4.3f+(i/3)*6.6f;
+                Tree(garden,new Vector3(x,.4f,z),.72f);
+                Box(garden,"Garden restored border",new Vector3(x,.27f,z-1.1f),new Vector3(2.6f,.1f,.14f),LightStone);
+            }
+
+            var homes = ProjectGroup("homes");
+            for(int side=-1;side<=1;side+=2) for(int i=0;i<3;i++)
+            {
+                float x=side*(10.5f+i*3.1f), z=side>0? -14f+i*2.2f:14f-i*2.2f;
+                Box(homes,"Restored house facade panel",new Vector3(x,1.55f,z),new Vector3(2.4f,1.7f,.16f),Plaster);
+                Box(homes,"Restored house timber door",new Vector3(x,.95f,z-.11f),new Vector3(.72f,1.55f,.1f),Wood);
+                Box(homes,"Restored house lintel",new Vector3(x,1.85f,z-.19f),new Vector3(1.15f,.18f,.12f),Tile);
+            }
+
+            var workshop = ProjectGroup("workshop");
+            Box(workshop,"Restoration workbench",new Vector3(18,.72f,-8),new Vector3(3.2f,.22f,1.2f),Wood);
+            for(int x=-1;x<=1;x+=2) Box(workshop,"Workbench leg",new Vector3(18+x*1.25f,.32f,-8),new Vector3(.18f,.8f,.18f),DarkStone);
+            Box(workshop,"Workshop tool rack",new Vector3(18,1.7f,-9.1f),new Vector3(3.2f,1.6f,.16f),DarkStone);
+            for(int i=0;i<4;i++) Box(workshop,"Workshop tool",new Vector3(16.9f+i*.72f,1.72f,-8.98f),new Vector3(.12f,.85f,.12f),TileLight);
+
+            var gate = ProjectGroup("gate");
+            Box(gate,"Renewed city gate lintel",new Vector3(0,4.7f,24),new Vector3(8,.55f,1.2f),Tile);
+            Box(gate,"Renewed city gate left door",new Vector3(-1.65f,1.9f,24),new Vector3(2.8f,3.8f,.3f),Wood);
+            Box(gate,"Renewed city gate right door",new Vector3(1.65f,1.9f,24),new Vector3(2.8f,3.8f,.3f),Wood);
+            BuildLantern(gate,new Vector3(-4,3.5f,23.2f));
+            BuildLantern(gate,new Vector3(4,3.5f,23.2f));
+
+            var courtyard = ProjectGroup("courtyard");
+            Box(courtyard,"Civic courtyard renewed paving",new Vector3(17,.18f,8),new Vector3(11,.12f,9),LightStone);
+            Box(courtyard,"Courtyard water channel",new Vector3(17,.34f,8),new Vector3(7,.1f,.48f),Water);
+            for(int i=0;i<3;i++) Box(courtyard,"Courtyard stone bench",new Vector3(13+i*4,.65f,11.5f),new Vector3(2.1f,.28f,.7f),Wood);
+
+            var landmark = ProjectGroup("landmark");
+            Box(landmark,"Landmark interpretation plinth",new Vector3(0,.35f,-20),new Vector3(6,.5f,2),LightStone);
+            Box(landmark,"Landmark interpretation plaque",new Vector3(0,1.2f,-21),new Vector3(3.6f,1.2f,.18f),Tile);
+            for(int i=0;i<3;i++) BuildLantern(landmark,new Vector3(-2.8f+i*2.8f,.5f,-18.5f));
+
+            ApplyCityProjects(Array.Empty<string>());
+        }
+
+        static Transform ProjectGroup(string id)
+        {
+            var group=Child(root,"CityProject_"+id);
+            group.gameObject.SetActive(false);
+            return group;
+        }
+
+        public static void ApplyCityProjects(string[] ownedProjectIds)
+        {
+            var owned=new HashSet<string>(ownedProjectIds ?? Array.Empty<string>(),StringComparer.Ordinal);
+            string[] ids={"fountain","bazaar","garden","homes","workshop","gate","courtyard","landmark"};
+            foreach(string id in ids)
+            {
+                var group=GameObject.Find("MehrganWorld/CityProject_"+id);
+                if(group!=null) group.SetActive(owned.Contains(id));
             }
         }
 
