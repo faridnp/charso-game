@@ -32,7 +32,8 @@ This is the ordered implementation plan. Work should proceed through complete ve
 - [ ] Build a performant, original 3D environment and restoration-stage variants.
 - [x] Add isometric city camera movement, ambient city animation, live 3D chapter preview and visible restoration/progression feedback; final art and device profiling remain open.
 - [ ] Add original characters and reviewed story beats.
-- [x] Integrate puzzle rewards and the local city-project shop with persistent visual blockout unlocks.\n- [ ] Replace project blockout props with optimized authored art and profile device performance.
+- [x] Integrate puzzle rewards and the local city-project shop with persistent visual blockout unlocks.
+- [ ] Replace project blockout props with optimized authored art and profile device performance.
 
 ## P3 — production operations
 
