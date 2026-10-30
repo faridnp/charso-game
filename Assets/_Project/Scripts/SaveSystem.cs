@@ -45,8 +45,10 @@ namespace Charso
         {
             if(progress==null)return;
             Clean(progress);
-            Repository.Save(new SaveGameData
+            try
             {
+                Repository.Save(new SaveGameData
+                {
                 SchemaVersion=2,
                 LevelIndex=progress.LevelIndex,
                 SoftCurrency=progress.Coins,
@@ -55,8 +57,13 @@ namespace Charso
                 CurrentLevelSolved=progress.CurrentLevelSolved,
                 CurrentLevelRestored=progress.CurrentLevelRestored,
                 LastCompletedPuzzleId=progress.LastCompletedPuzzleId,
-                AppliedTransactionIds=progress.AppliedTransactionIds
-            });
+                    AppliedTransactionIds=progress.AppliedTransactionIds
+                });
+            }
+            catch(Exception exception)
+            {
+                Debug.LogError("Charso save failed: "+exception.Message);
+            }
         }
 
         static PlayerProgress Clean(PlayerProgress p)
