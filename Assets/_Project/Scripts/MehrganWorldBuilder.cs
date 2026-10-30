@@ -13,7 +13,6 @@ namespace Charso
     {
         static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
         static Transform root;
-        static Transform dynamicRoot;
         static readonly Color Sand = new Color(.72f,.59f,.42f);
         static readonly Color LightStone = new Color(.84f,.77f,.64f);
         static readonly Color DarkStone = new Color(.42f,.34f,.26f);
@@ -35,7 +34,6 @@ namespace Charso
             root = new GameObject("MehrganWorld").transform;
             root.position = Vector3.zero;
             root.localScale = Vector3.one * .72f;
-            dynamicRoot = Child(root, "Animated details");
 
             BuildGroundAndStreets();
             BuildCentralPlaza();
@@ -49,6 +47,7 @@ namespace Charso
             BuildVegetation();
             BuildLightingAndCamera();
             ApplyRestorationStage(restorationStage);
+            if(root.GetComponent<MehrganAmbientAnimator>()==null)root.gameObject.AddComponent<MehrganAmbientAnimator>();
         }
 
         public static void ApplyRestorationStage(int stage)
