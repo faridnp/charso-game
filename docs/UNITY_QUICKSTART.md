@@ -2,7 +2,7 @@
 
 ## Exact Editor version
 
-This repository is pinned to **Unity 6000.3.28f1** in `ProjectSettings/ProjectVersion.txt`. Use that exact editor patch for the first import. In Unity Hub, install the Unity 6.3 LTS editor and select the exact `6000.3.28f1` patch if it is not already installed. For Android APK builds, include:
+This repository is pinned to **Unity 6000.3.27f1** in `ProjectSettings/ProjectVersion.txt`. Use that exact editor patch for the first import. In Unity Hub, install the Unity 6.3 LTS editor and select the exact `6000.3.27f1` patch if it is not already installed. For Android APK builds, include:
 - Android Build Support
 - Android SDK & NDK Tools
 - OpenJDK
@@ -15,7 +15,7 @@ The project currently uses Unity UGUI and Unity Test Framework packages from `Pa
 2. Extract it to a normal writable folder, for example `D:\\UnityProjects\\Charso`.
 3. Open Unity Hub → Projects → Add → Add project from disk.
 4. Select the extracted **repository root**. It must be the folder containing all three folders `Assets`, `Packages` and `ProjectSettings`. Do not select `Assets` itself.
-5. When Hub asks for an Editor, choose Unity `6000.3.28f1`. Do not upgrade the project to Unity 7 Alpha for this first run.
+5. When Hub asks for an Editor, choose Unity `6000.3.27f1`. Do not upgrade the project to Unity 7 Alpha for this first run.
 6. Let Unity finish package resolution and script compilation. Open Window → General → Console and check for red errors before continuing.
 
 ## Generate and play the first scene
