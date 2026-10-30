@@ -96,10 +96,17 @@ def main() -> int:
     reserve = net_after_tutorial - project_cost
     if reserve < 0:
         fail(f"Economy is insolvent: {net_after_tutorial} earned after tutorial restorations vs {project_cost} project cost.")
+    if (len(all_rows), total_coins, project_cost, reserve) != (220, 1898, 1770, 98):
+        fail(
+            "Unexpected balance snapshot: "
+            f"puzzles={len(all_rows)}, earnings={total_coins}, "
+            f"project_cost={project_cost}, reserve={reserve}."
+        )
 
     print("Puzzle and economy validation passed.")
     print(f"Puzzle bank: {len(all_rows)} total ({len(opening_rows)} opening + {len(extended_rows)} extended).")
     print(f"Difficulty distribution: easy={difficulty_counts[1]}, medium={difficulty_counts[2]}, hard={difficulty_counts[3]}.")
+    print(f"Extended bank earnings: {sum(8 if row[5] == 1 else 10 if row[5] == 2 else 12 for row in extended_rows)}.")
     print(f"Full-clear earnings: {total_coins}; after tutorial restoration costs: {net_after_tutorial}.")
     print(f"City projects: {len(projects)}, total cost: {project_cost}, remaining reserve: {reserve}.")
     return 0
