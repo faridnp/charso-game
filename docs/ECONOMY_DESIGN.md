@@ -61,4 +61,4 @@ The eight draft project costs total 1,770 coins, leaving a small reserve from th
 
 ## Implementation status
 
-This is a design proposal. The existing runtime currently awards 8 local coins per first-time puzzle solve and spends 3 on a hint or 10 at the first four tutorial restoration milestones. There is no rewarded-ad coin grant, paid coin pack, city project shop, server-side account balance, or persistent per-project unlock yet. Unity Editor tests and device verification are pending.
+This is a design proposal. The existing runtime currently awards 8 local coins per first-time puzzle solve and spends 3 on a hint or 10 at the first three tutorial restoration transitions. There is no rewarded-ad coin grant, paid coin pack, city project shop, server-side account balance, or persistent per-project unlock yet. Unity Editor tests and device verification are pending.
