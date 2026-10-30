@@ -15,6 +15,7 @@ This is the ordered implementation plan. Work should proceed through complete ve
 
 - [ ] Proper Persian text system and approved font/license (candidate evaluation documented in `RTL_TEXT_PIPELINE.md`; current UGUI text remains a blocker).
 - [ ] Navigation/state machine: boot, onboarding, home, district, puzzle, reward, restoration, settings, pause.
+- [x] Add 200 original Persian word puzzles beyond the 20-level opening arc (220 total), with topic/difficulty metadata and automated structural/tile-inventory tests. Native editorial approval remains open.
 - [ ] Data-driven puzzle and hint definitions.
 - [ ] Deterministic puzzle engine with accepted answers and duplicate protection.
 - [ ] Transactional local save with migration and corruption recovery.
