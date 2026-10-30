@@ -35,7 +35,7 @@ namespace Charso.Core
                     string expected = Crc32.Compute(Encoding.UTF8.GetBytes(envelope.Payload)).ToString("X8");
                     if (!string.Equals(expected, envelope.Checksum, StringComparison.OrdinalIgnoreCase)) return false;
                     data = JsonUtility.FromJson<SaveGameData>(envelope.Payload);
-                    if (data == null || data.SchemaVersion != 2) { data = null; return false; }
+                    if (data == null || data.SchemaVersion != 3) { data = null; return false; }
                     Sanitize(data);
                     return true;
                 }
@@ -66,12 +66,13 @@ namespace Charso.Core
 
         static void Sanitize(SaveGameData data)
         {
-            data.SchemaVersion = 2;
+            data.SchemaVersion = 3;
             data.LevelIndex = Math.Max(0, Math.Min(data.LevelIndex, 100000));
             data.SoftCurrency = Math.Max(0, Math.Min(data.SoftCurrency, 999999));
             data.RestorationStage = Math.Max(0, Math.Min(data.RestorationStage, 1000));
             data.SolvedLevels = Math.Max(0, Math.Min(data.SolvedLevels, 100000));
             if (data.AppliedTransactionIds == null) data.AppliedTransactionIds = Array.Empty<string>();
+            if (data.OwnedCityProjectIds == null) data.OwnedCityProjectIds = Array.Empty<string>();
             if (data.LastCompletedPuzzleId == null) data.LastCompletedPuzzleId = string.Empty;
         }
     }
