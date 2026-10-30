@@ -44,6 +44,34 @@ namespace Charso.Tests
         }
 
         [Test]
+        public void CityProjectPurchaseSpendsOnceAndPersistsOwnership()
+        {
+            var save = new SaveGameData { SoftCurrency = 500 };
+            Assert.IsTrue(CityProjectSystem.TryPurchase(save, "fountain", out string error), error);
+            Assert.IsTrue(CityProjectSystem.IsOwned(save, "fountain"));
+            Assert.AreEqual(370, save.SoftCurrency);
+            Assert.IsFalse(CityProjectSystem.TryPurchase(save, "fountain", out _));
+            Assert.AreEqual(370, save.SoftCurrency);
+        }
+
+        [Test]
+        public void CityProjectPurchaseDoesNotMutateSaveWhenBalanceIsInsufficient()
+        {
+            var save = new SaveGameData { SoftCurrency = 10 };
+            Assert.IsFalse(CityProjectSystem.TryPurchase(save, "fountain", out _));
+            Assert.AreEqual(10, save.SoftCurrency);
+            Assert.IsFalse(CityProjectSystem.IsOwned(save, "fountain"));
+        }
+
+        [Test]
+        public void UnknownCityProjectCannotBePurchased()
+        {
+            var save = new SaveGameData { SoftCurrency = 500 };
+            Assert.IsFalse(CityProjectSystem.TryPurchase(save, "fake-project", out _));
+            Assert.AreEqual(500, save.SoftCurrency);
+        }
+
+        [Test]
         public void CannotExceedMaximumBalance()
         {
             var state = new RewardLedgerState { SoftCurrency = 999999 };
