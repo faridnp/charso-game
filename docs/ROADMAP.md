@@ -28,7 +28,10 @@ This roadmap is milestone-based. Dates are not promised before the Unity baselin
 - [ ] Integrate the tested domain core into the real gameplay UI and content pipeline.
 - [ ] Replace prototype save with versioned, checksummed, recoverable save repository and migration tests.
 - [ ] One small heritage location with approved reference pack.
-- [ ] Camera/UI prototype with RTL and screen scaling.
+- [x] Procedural Mehrgan city blockout with districts, restoration variants, and touch/mouse camera exploration.
+- [x] Original runtime UI icon set and basic HUD visual hierarchy.
+- [ ] Replace legacy UI text with verified Persian shaping and approved embedded font.
+- [ ] Final environment art, animation, lighting, and device profiling.
 - [ ] Profile CPU, GPU, memory, load time, and thermal behavior on low/mid/high test devices.
 - [ ] Confirm reproducible Unity Android build and device installation.
 
