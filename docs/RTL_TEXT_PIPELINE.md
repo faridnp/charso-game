@@ -1,38 +1,31 @@
-# Persian RTL Text Rendering Decision & Test Plan
+# Persian RTL Text Rendering — Integration & Validation
 
-## Why this is a release blocker
+## Runtime integration
 
-Right alignment alone is not Persian text support. The game must render contextual Arabic-script glyph shaping, bidirectional mixed Persian/Latin strings, punctuation, numerals, multiline labels, and ZWNJ correctly. The current legacy UGUI `Text` bootstrap does not meet this bar.
+The first playable HUD now uses a real right-to-left text component instead of legacy `UnityEngine.UI.Text`.
 
-## Research candidates
+- Text engine: TextMeshPro (`com.unity.textmeshpro` pinned to `2.0.1`).
+- RTL shaping: RTLTMPro v4.0.0, source vendored under `Assets/_Project/Scripts/RTLTMPro` from upstream commit `69c9193fc27218f17679cc57382a61ac4a717b2b`.
+- Runtime UI type: `RTLTMPro.RTLTextMeshPro`.
+- Font: bundled `Assets/_Project/Resources/Fonts/Vazirmatn-Regular.ttf`, loaded from Resources and converted into a dynamic TMP SDF font asset at startup. OS-font fallback is only used if the bundled resource fails to load.
+- Font license: SIL Open Font License 1.1; full notice is in `THIRD_PARTY_NOTICES.md`.
+- RTLTMPro license: MIT; included next to the vendored source in `Assets/_Project/Scripts/RTLTMPro/LICENSE.txt`.
 
-### RTLTMPro 4.0.0
-- Upstream: https://github.com/pnarimani/RTLTMPro
-- OpenUPM distribution: https://openupm.com/packages/com.nosuchstudio.rtltmpro/
-- Upstream v4.0.0 release identifies Unity 6+ compatibility.
-- Package supports Farsi, Arabic, Hebrew, TMP rich text, multiline, number modes, and ZWNJ according to its README.
-- Runtime assembly name: `RTLTMPro`; UI component: `RTLTMPro.RTLTextMeshPro`.
-- License reported as MIT by the package metadata.
-- Risk: the upstream README says it is looking for maintainers; OpenUPM reports low download volume. Treat it as a candidate, not as a verified dependency.
+Vendoring RTLTMPro avoids a separate Git URL package clone during the Unity project import. TextMeshPro remains a known package dependency in `Packages/manifest.json`.
 
-### Font
-- Vazirmatn upstream: https://github.com/rastikerdar/vazirmatn
-- License: SIL Open Font License 1.1 (OFL), suitable for embedding subject to its terms.
-- Prefer the UI variant where available; build a TMP SDF font asset with a reviewed Persian, Arabic, Latin, punctuation, and numeral glyph set.
-- Include the OFL license and required notices in the shipped project.
+## What is implemented in the first playable HUD
 
-## Integration policy
+- Persian right-to-left labels, puzzle clues, action buttons, city shop, progress and information panels use `RTLTextMeshPro`.
+- The RTL component is configured for Farsi shaping, preserving numerals and rich-text tags. It does not force every English-only string through the RTL reordering path.
+- The project bundles Vazirmatn rather than depending on arbitrary fonts installed on the developer's computer.
+- The home chapter card renders a live camera view of the 3D Mehrgan city, not a static flat skyline placeholder.
+- The UI includes a canvas entrance transition, floating ambient details, pressed-button scaling, panel pop/shake feedback and a small success confetti burst.
 
-Do not switch production UI to a new text component until:
-1. Unity 6.3.28f1 resolves the exact package graph without warnings/errors.
-2. A Vazirmatn TMP font asset is generated and committed with its license.
-3. The font atlas contains all characters used by the game and fallback behavior is intentional.
-4. Mixed Persian/English labels, numbers, URLs, parentheses, punctuation, and ZWNJ render correctly.
-5. Multiline wrapping, truncation, autosizing, buttons, puzzle tiles, and touch input are verified.
-6. Android builds render identically on the minimum supported device tier and tablet tier.
-7. Package source, exact version, license, and update policy are pinned.
+## Verification status
 
-## Required test strings
+This is integrated source code, **not yet a verified release sign-off**. Unity Editor compilation, TMP font-atlas generation at runtime, glyph coverage, mixed-direction rendering, portrait phone/tablet layout, and Android device rendering still require actual Unity and device tests. A source-level CI check cannot replace those tests.
+
+## Required visual and text test strings
 
 - `چهارسو؛ بازسازی میراث ایران`
 - `مرحله ۱۲ — Mehrgan District 3`
@@ -41,6 +34,10 @@ Do not switch production UI to a new text component until:
 - `کابل‌کشی، عیب‌یابی و راه‌اندازی`
 - `www.example.com — فارسی و English`
 
-## Current status
+## Remaining release gates
 
-The current runtime HUD is still legacy UGUI Text and is not approved for release. The candidate research is recorded; package and font integration remain an explicit production task. Do not hide this gap or call the current UI RTL-complete.
+1. Run these strings through the actual HUD and input controls in Unity 6000.3.27f1.
+2. Verify ZWNJ, punctuation, brackets, Latin words, numbers, multiline wrapping and ellipsis at phone and tablet portrait ratios.
+3. Verify dynamic TMP font-atlas population and fallback characters on the lowest supported Android tier.
+4. Profile first-launch font creation. If it is too slow, generate a static TMP SDF font asset in the Editor and load that asset instead.
+5. Capture screenshots from both declared Android reference devices before calling Persian UI complete.
