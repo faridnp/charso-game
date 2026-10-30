@@ -1,15 +1,74 @@
 using System;
-using System.IO;
+using Charso.Core;
 using UnityEngine;
-namespace Charso {
- [Serializable] public sealed class PlayerProgress {
-  public int SchemaVersion=1; public int LevelIndex; public int Coins=20; public int RestorationStage; public int SolvedLevels;
-  public bool CurrentLevelSolved; public bool CurrentLevelRestored;
- }
- public static class SaveSystem {
-  static string FilePath=>Path.Combine(Application.persistentDataPath,"charso-save.json");
-  public static PlayerProgress Load(){try{if(File.Exists(FilePath)){var p=JsonUtility.FromJson<PlayerProgress>(File.ReadAllText(FilePath));if(p!=null&&p.SchemaVersion==1)return Clean(p);}}catch(Exception e){Debug.LogWarning("Save read failed: "+e.Message);}return new PlayerProgress();}
-  public static void Store(PlayerProgress p){if(p==null)return;Clean(p);Directory.CreateDirectory(Application.persistentDataPath);string tmp=FilePath+".tmp",bak=FilePath+".bak";File.WriteAllText(tmp,JsonUtility.ToJson(p,true));try{if(File.Exists(FilePath))File.Copy(FilePath,bak,true);if(File.Exists(FilePath))File.Delete(FilePath);File.Move(tmp,FilePath);}catch(Exception e){Debug.LogError("Save write failed: "+e.Message);}}
-  static PlayerProgress Clean(PlayerProgress p){p.LevelIndex=Mathf.Clamp(p.LevelIndex,0,WordPuzzle.Levels.Length-1);p.Coins=Mathf.Clamp(p.Coins,0,999999);p.RestorationStage=Mathf.Clamp(p.RestorationStage,0,3);p.SolvedLevels=Mathf.Max(0,p.SolvedLevels);p.SchemaVersion=1;return p;}
- }
+
+namespace Charso
+{
+    [Serializable]
+    public sealed class PlayerProgress
+    {
+        public int SchemaVersion=2;
+        public int LevelIndex;
+        public int Coins=20;
+        public int RestorationStage;
+        public int SolvedLevels;
+        public bool CurrentLevelSolved;
+        public bool CurrentLevelRestored;
+        public string LastCompletedPuzzleId=string.Empty;
+        public string[] AppliedTransactionIds=Array.Empty<string>();
+    }
+
+    public static class SaveSystem
+    {
+        static SaveRepository Repository => new SaveRepository(Application.persistentDataPath,"charso-save.json");
+
+        public static PlayerProgress Load()
+        {
+            SaveGameData data=Repository.LoadOrNew(out bool recovered,out bool migrated);
+            if(recovered)Debug.LogWarning("Charso save recovered from the last known-good backup.");
+            if(migrated)Debug.Log("Charso save migrated to schema v2.");
+            return Clean(new PlayerProgress
+            {
+                SchemaVersion=2,
+                LevelIndex=data.LevelIndex,
+                Coins=data.SoftCurrency,
+                RestorationStage=data.RestorationStage,
+                SolvedLevels=data.SolvedLevels,
+                CurrentLevelSolved=data.CurrentLevelSolved,
+                CurrentLevelRestored=data.CurrentLevelRestored,
+                LastCompletedPuzzleId=data.LastCompletedPuzzleId,
+                AppliedTransactionIds=data.AppliedTransactionIds
+            });
+        }
+
+        public static void Store(PlayerProgress progress)
+        {
+            if(progress==null)return;
+            Clean(progress);
+            Repository.Save(new SaveGameData
+            {
+                SchemaVersion=2,
+                LevelIndex=progress.LevelIndex,
+                SoftCurrency=progress.Coins,
+                RestorationStage=progress.RestorationStage,
+                SolvedLevels=progress.SolvedLevels,
+                CurrentLevelSolved=progress.CurrentLevelSolved,
+                CurrentLevelRestored=progress.CurrentLevelRestored,
+                LastCompletedPuzzleId=progress.LastCompletedPuzzleId,
+                AppliedTransactionIds=progress.AppliedTransactionIds
+            });
+        }
+
+        static PlayerProgress Clean(PlayerProgress p)
+        {
+            p.LevelIndex=Mathf.Clamp(p.LevelIndex,0,WordPuzzle.Levels.Length-1);
+            p.Coins=Mathf.Clamp(p.Coins,0,999999);
+            p.RestorationStage=Mathf.Clamp(p.RestorationStage,0,3);
+            p.SolvedLevels=Mathf.Clamp(p.SolvedLevels,0,WordPuzzle.Levels.Length);
+            p.SchemaVersion=2;
+            if(p.AppliedTransactionIds==null)p.AppliedTransactionIds=Array.Empty<string>();
+            if(p.LastCompletedPuzzleId==null)p.LastCompletedPuzzleId=string.Empty;
+            return p;
+        }
+    }
 }
