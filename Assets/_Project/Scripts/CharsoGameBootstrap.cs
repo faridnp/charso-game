@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Charso.Core;
 using UnityEngine;
 using UnityEngine.UI;
  using UnityEngine.EventSystems;
@@ -37,9 +39,10 @@ namespace Charso {
   void Pick(int i){if(solvedIndex==p.LevelIndex||picks.Count>=WordPuzzle.Levels[p.LevelIndex].Letters.Length)return;picks.Add(i);letterButtons[i].interactable=false;answer.text=JoinPicks();}
   string JoinPicks(){string s="";foreach(int i in picks)s+=WordPuzzle.Levels[p.LevelIndex].Letters[i];return s;}
   void Clear(){picks.Clear();foreach(var b in letterButtons)b.interactable=true;answer.text="؟";}
-  void Check(){if(!WordPuzzle.IsCorrect(WordPuzzle.Levels[p.LevelIndex],JoinPicks())){status.text="این پاسخ درست نیست؛ دوباره تلاش کن.";return;}solvedIndex=p.LevelIndex;p.CurrentLevelSolved=true;p.SolvedLevels++;p.Coins+=8;SaveSystem.Store(p);Refresh();status.text="درست است! ۸ سکه گرفتی.";}
-  void Hint(){if(p.Coins<3||solvedIndex==p.LevelIndex)return;p.Coins-=3;SaveSystem.Store(p);coins.text="سکه: "+p.Coins;status.text="راهنمایی: واژه با «"+WordPuzzle.Levels[p.LevelIndex].Answer.Substring(0,1)+"» آغاز می‌شود.";hint.interactable=p.Coins>=3;}
-  void Restore(){if(solvedIndex!=p.LevelIndex||restored||p.Coins<10||p.RestorationStage>=3)return;p.Coins-=10;p.RestorationStage++;restored=true;p.CurrentLevelRestored=true;SaveSystem.Store(p);MehrganWorldBuilder.ApplyRestorationStage(p.RestorationStage);Refresh();}
+  void Check(){if(!WordPuzzle.IsCorrect(WordPuzzle.Levels[p.LevelIndex],JoinPicks())){status.text="این پاسخ درست نیست؛ دوباره تلاش کن.";return;}solvedIndex=p.LevelIndex;p.CurrentLevelSolved=true;p.SolvedLevels++;bool rewarded=TryApplyCurrency("puzzle:"+WordPuzzle.Levels[p.LevelIndex].Id+":solve",8);p.LastCompletedPuzzleId="word-"+WordPuzzle.Levels[p.LevelIndex].Id;SaveSystem.Store(p);Refresh();status.text=rewarded?"درست است! ۸ سکه گرفتی.":"پاسخ درست ثبت شد؛ پاداش قبلاً ثبت شده بود.";}
+  void Hint(){if(p.Coins<3||solvedIndex==p.LevelIndex)return;if(!TryApplyCurrency("hint:"+p.LevelIndex+":"+Guid.NewGuid().ToString("N"),-3))return;SaveSystem.Store(p);coins.text="سکه: "+p.Coins;status.text="راهنمایی: واژه با «"+WordPuzzle.Levels[p.LevelIndex].Answer.Substring(0,1)+"» آغاز می‌شود.";hint.interactable=p.Coins>=3;}
+  void Restore(){if(solvedIndex!=p.LevelIndex||restored||p.Coins<10||p.RestorationStage>=3)return;int nextStage=p.RestorationStage+1;if(!TryApplyCurrency("restore:"+p.LevelIndex+":"+nextStage,-10))return;p.RestorationStage=nextStage;restored=true;p.CurrentLevelRestored=true;SaveSystem.Store(p);MehrganWorldBuilder.ApplyRestorationStage(p.RestorationStage);Refresh();}
+  bool TryApplyCurrency(string transactionId,int delta){var state=new RewardLedgerState{SoftCurrency=p.Coins,AppliedTransactionIds=p.AppliedTransactionIds};bool applied=RewardLedger.TryApply(state,transactionId,delta);if(applied){p.Coins=state.SoftCurrency;p.AppliedTransactionIds=state.AppliedTransactionIds;}return applied;}
   void Next(){if(!restored||p.LevelIndex>=WordPuzzle.Levels.Length-1)return;p.LevelIndex++;solvedIndex=-1;restored=false;p.CurrentLevelSolved=false;p.CurrentLevelRestored=false;picks.Clear();SaveSystem.Store(p);Refresh();}
   static void AddIcon(Transform parent,CharsoIcon kind,float x0,float y0,float x1,float y1){var g=new GameObject("Icon_"+kind,typeof(RectTransform),typeof(Image));g.transform.SetParent(parent,false);var img=g.GetComponent<Image>();img.sprite=CharsoIconFactory.Create(kind);img.preserveAspect=true;Place(g.GetComponent<RectTransform>(),x0,y0,x1,y1);}
   static void DecorateButton(Button button,CharsoIcon kind){var label=button.GetComponentInChildren<Text>();if(label!=null)Place(label.rectTransform,.20f,0,.98f,1);AddIcon(button.transform,kind,.035f,.18f,.18f,.82f);var sh=button.gameObject.AddComponent<Shadow>();sh.effectColor=new Color(0,0,0,.14f);sh.effectDistance=new Vector2(0,-2);}
