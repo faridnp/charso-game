@@ -32,7 +32,6 @@ namespace Charso
                 ApplyRestorationStage(restorationStage);
                 return;
             }
-            Materials.Clear();
             root = new GameObject("MehrganWorld").transform;
             root.position = Vector3.zero;
             root.localScale = Vector3.one * .72f;
@@ -216,6 +215,7 @@ namespace Charso
             Box(p,"Rear iwan mass",new Vector3(9,2.0f,13.9f),new Vector3(8,3.6f,.5f),Plaster);
             Box(p,"Iwan deep recess",new Vector3(9,1.7f,13.62f),new Vector3(3.2f,2.8f,.12f),Tile);
             Box(p,"Iwan inner door",new Vector3(9,1.1f,13.52f),new Vector3(1.4f,2.2f,.1f),Wood);
+            Arch(p,"Courtyard iwan arch",new Vector3(9,.28f,13.36f),3.5f,3.4f,.3f,.2f,TileLight);
             for(int side=-1;side<=1;side+=2)
             {
                 for(int i=0;i<3;i++)
@@ -225,6 +225,8 @@ namespace Charso
                 }
             }
             BuildDome(p,new Vector3(9,3.85f,10),1.8f,Tile);
+            BuildMinaret(p,new Vector3(4.5f,0,13.1f),.62f,5.2f);
+            BuildMinaret(p,new Vector3(13.5f,0,13.1f),.62f,5.2f);
             for(int i=0;i<4;i++)
             {
                 float x=5.5f+(i%2)*7f,z=7.2f+(i/2)*5.6f;
@@ -261,6 +263,7 @@ namespace Charso
             Box(p,"South gate tower right",new Vector3(4,2.4f,-25),new Vector3(2,4.8f,1.2f),LightStone);
             Box(p,"South gate lintel",new Vector3(0,4.5f,-25),new Vector3(6,.7f,1.5f),Tile);
             Box(p,"South gate passage",new Vector3(0,1.8f,-25),new Vector3(4.8f,3.5f,.25f),Wood);
+            Arch(p,"South gate arch",new Vector3(0,.35f,-24.2f),5.8f,4.2f,.42f,.24f,Tile);
         }
 
         static void BuildLandmarkDistrict(int stage)
@@ -320,6 +323,48 @@ namespace Charso
                 new Vector3(-5,.0f,22),new Vector3(5,.0f,22),new Vector3(-15,.0f,13),new Vector3(15,.0f,13)
             };
             for(int i=0;i<positions.Length;i++) Tree(p,positions[i],i%3==0?1.0f:.78f);
+        }
+
+        static void BuildMinaret(Transform p,Vector3 at,float radius,float height)
+        {
+            Cylinder(p,"Minaret lower drum",at+new Vector3(0,height*.22f,0),new Vector3(radius*2,height*.44f,radius*2),LightStone,20);
+            Cylinder(p,"Minaret tile band",at+new Vector3(0,height*.48f,0),new Vector3(radius*2.2f,.22f,radius*2.2f),Tile,20);
+            Cylinder(p,"Minaret shaft",at+new Vector3(0,height*.69f,0),new Vector3(radius*1.35f,height*.42f,radius*1.35f),Plaster,20);
+            Cylinder(p,"Minaret balcony",at+new Vector3(0,height*.86f,0),new Vector3(radius*2.0f,.16f,radius*2.0f),TileLight,20);
+            Cylinder(p,"Minaret crown",at+new Vector3(0,height*.95f,0),new Vector3(radius*1.1f,height*.18f,radius*1.1f),Tile,20);
+        }
+
+        static void Arch(Transform parent,string name,Vector3 position,float width,float height,float thickness,float depth,Color color)
+        {
+            float outer=width*.5f;
+            float inner=Mathf.Max(.05f,outer-thickness);
+            float centerY=height-outer;
+            int segments=20;
+            var vertices=new List<Vector3>();
+            var triangles=new List<int>();
+            for(int i=0;i<=segments;i++)
+            {
+                float a=Mathf.PI*i/segments;
+                float co=Mathf.Cos(a),si=Mathf.Sin(a);
+                vertices.Add(new Vector3(co*outer,centerY+si*outer,-depth*.5f));
+                vertices.Add(new Vector3(co*inner,centerY+si*inner,-depth*.5f));
+                vertices.Add(new Vector3(co*outer,centerY+si*outer,depth*.5f));
+                vertices.Add(new Vector3(co*inner,centerY+si*inner,depth*.5f));
+            }
+            for(int i=0;i<segments;i++)
+            {
+                int a=i*4,b=(i+1)*4;
+                triangles.AddRange(new[]{a,b,b+1,a,b+1,a+1});
+                triangles.AddRange(new[]{a+2,a+3,b+3,a+2,b+3,b+2});
+                triangles.AddRange(new[]{a,a+2,b+2,a,b+2,b});
+                triangles.AddRange(new[]{a+1,b+1,b+3,a+1,b+3,a+3});
+            }
+            var mesh=new Mesh();mesh.name=name+" mesh";mesh.SetVertices(vertices);mesh.SetTriangles(triangles,0);mesh.RecalculateNormals();mesh.RecalculateBounds();
+            var g=new GameObject(name,typeof(MeshFilter),typeof(MeshRenderer));
+            g.transform.SetParent(parent,false);g.transform.localPosition=position;
+            g.GetComponent<MeshFilter>().sharedMesh=mesh;g.GetComponent<MeshRenderer>().sharedMaterial=Mat(color);
+            Box(g.transform,"Arch left pier",new Vector3(-outer+thickness*.5f,centerY*.5f,0),new Vector3(thickness,centerY,depth),color);
+            Box(g.transform,"Arch right pier",new Vector3(outer-thickness*.5f,centerY*.5f,0),new Vector3(thickness,centerY,depth),color);
         }
 
         static void BuildPergola(Transform p,Vector3 at,float width)
