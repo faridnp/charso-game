@@ -44,7 +44,7 @@ The player earns the ordinary soft currency by solving puzzles. Currency is spen
 | Restore civic courtyard | Paving, arcade and water feature | 300 |
 | Complete landmark chapter | Final approved chapter stages | 350 |
 
-The eight draft project costs total 1,770 coins, leaving a 120-coin reserve from the 1,890-coin full-clear path. The current runtime now includes a local city shop, one-time project ownership, coin deduction, schema-v3 persistence and eight distinct blockout visual groups that activate when a project is purchased. These are prototype balancing costs and blockout visuals, not final prices or final art. Never charge for an already-owned project. Project unlocks and balances remain client-local and are not tamper-proof.
+The eight draft project costs total 1,770 coins, leaving 90 coins after the three 10-coin tutorial restoration payments (1,860 coins net from the 1,890-coin full-clear path), before any hints. The current runtime now includes a local city shop, one-time project ownership, coin deduction, schema-v3 persistence and eight distinct blockout visual groups that activate when a project is purchased. These are prototype balancing costs and blockout visuals, not final prices or final art. Never charge for an already-owned project. Project unlocks and balances remain client-local and are not tamper-proof.
 
 ## Economy sanity checks
 
