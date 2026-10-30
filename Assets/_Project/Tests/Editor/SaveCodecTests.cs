@@ -18,6 +18,27 @@ namespace Charso.Tests
         }
 
         [Test]
+        public void SchemaV2EnvelopeMigratesAndKeepsCurrencyAndTransactions()
+        {
+            var previous = new LegacySaveV2ForTest
+            {
+                SchemaVersion = 2, LevelIndex = 12, SoftCurrency = 345,
+                RestorationStage = 2, SolvedLevels = 12,
+                AppliedTransactionIds = new[] { "puzzle:12:solve" }
+            };
+            string payload = UnityEngine.JsonUtility.ToJson(previous);
+            string checksum = Crc32ForTest(payload);
+            string envelope = UnityEngine.JsonUtility.ToJson(new SaveEnvelopeForTest
+                { FormatVersion = 1, Payload = payload, Checksum = checksum });
+            Assert.IsTrue(SaveCodec.TryDecode(envelope, out SaveGameData loaded, out bool migrated));
+            Assert.IsTrue(migrated);
+            Assert.AreEqual(3, loaded.SchemaVersion);
+            Assert.AreEqual(345, loaded.SoftCurrency);
+            Assert.AreEqual("puzzle:12:solve", loaded.AppliedTransactionIds[0]);
+            Assert.AreEqual(0, loaded.OwnedCityProjectIds.Length);
+        }
+
+        [Test]
         public void CorruptedPayloadIsRejected()
         {
             string json = SaveCodec.Encode(new SaveGameData { SoftCurrency = 10 });
@@ -45,5 +66,9 @@ namespace Charso.Tests
             Assert.AreEqual(0, data.LevelIndex);
             Assert.AreEqual(0, data.SoftCurrency);
         }
+    [System.Serializable] public sealed class LegacySaveV2ForTest { public int SchemaVersion=2; public int LevelIndex; public int SoftCurrency; public int RestorationStage; public int SolvedLevels; public bool CurrentLevelSolved; public bool CurrentLevelRestored; public string LastCompletedPuzzleId=""; public string[] AppliedTransactionIds=System.Array.Empty<string>(); }
+    [System.Serializable] public sealed class SaveEnvelopeForTest { public int FormatVersion=1; public string Payload; public string Checksum; }
+    static string Crc32ForTest(string payload) { uint crc=0xffffffff; byte[] bytes=System.Text.Encoding.UTF8.GetBytes(payload); for(int i=0;i<bytes.Length;i++){crc^=bytes[i];for(int b=0;b<8;b++)crc=(crc&1)!=0?0xedb88320^(crc>>1):crc>>1;} return (~crc).ToString("X8"); }
+
     }
 }
