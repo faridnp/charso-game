@@ -2,42 +2,49 @@
 
 ## Decision
 
-The preferred delivery path is a GitHub-hosted GitHub Actions runner that builds an Android APK and publishes it as a workflow artifact. A Windows self-hosted runner on the developer PC is the fallback if Unity Personal licensing or hosted-runner constraints prevent reliable cloud builds.
+Preferred path: GitHub-hosted GitHub Actions runner, provided a Unity-supported CI license can be used. Fallback: a Windows self-hosted runner on the developer PC using the Unity Editor activated through Unity Hub.
 
 ## Current repository state
 
-The repository is still a pre-production foundation. It does not yet contain a runnable Unity project, including `Assets/`, `Packages/`, and `ProjectSettings/ProjectVersion.txt`. Therefore, the APK workflow intentionally checks for these files and skips the build until the Unity project is committed. A skipped build is not a successful APK build.
+The repository is still a pre-production foundation. It does not yet contain a runnable Unity project, including `Assets/`, `Packages/`, and `ProjectSettings/ProjectVersion.txt`. The cloud workflow checks for these files and skips its build job until the Unity project exists. The Windows workflow is manually triggered and validates the project, exact Editor version, Android module, and build entry point before attempting a build. A skipped or blocked build is not a successful APK build.
 
-## Cloud build prerequisites
+## Cloud build
 
-1. A complete Unity project committed to this repository.
-2. A Unity Editor version pinned in `ProjectSettings/ProjectVersion.txt`.
-3. Android Build Support configured for that Editor version.
-4. A Unity license method that Unity currently permits for the selected CI environment.
-5. A GitHub Actions secret named `UNITY_LICENSE`, only if the chosen license workflow legitimately provides a CI-usable license payload.
+The workflow `.github/workflows/android-apk.yml` uses GameCI's Unity Builder for Android and uploads APK output as the `Charso-Android-APK` artifact. It requires a complete Unity project, Android build support, and a CI-usable license payload in the GitHub Actions secret `UNITY_LICENSE`.
 
-The workflow uses GameCI's Unity Builder action for the Android target and uploads generated APK files as the `Charso-Android-APK` artifact. It does not upload signing keys or publish to an app store.
+The repository is currently public. GitHub's standard hosted runners for public repositories are free. If the repository is made private, hosted runner use draws from the account's included compute allowance and may be billed after that allowance.
 
-## Unity Personal licensing caveat
+## Unity Personal licensing limitation
 
-Do not assume that a Unity Personal seat can be activated on an arbitrary ephemeral GitHub-hosted runner. Unity's current documentation identifies Unity Hub as the supported activation route for Personal, while GameCI documents that the older manual Personal-license activation flow is no longer supported in some current configurations. Before relying on cloud builds, validate a compliant licensing path for the exact Unity Editor release and account. Never put Unity passwords, license files, keystores, or signing credentials in the repository.
+Unity's current official documentation says Unity Hub is the only supported activation and return method for Unity Personal; manual license activation is not supported for Personal plans. Therefore, do not assume a Personal seat can be activated on a fresh, ephemeral GitHub-hosted runner. Do not use browser/DOM workarounds or put passwords/license material in the repository. A cloud build should be enabled only if the account has a Unity-supported CI licensing path for the selected Editor version.
 
-If a compliant cloud license cannot be configured, use the Windows self-hosted runner fallback. The developer PC must have the matching Unity Editor with Android Build Support installed and activated in Unity Hub. The runner must execute under the same Windows account/context that can access that activated Unity installation. The self-hosted workflow should invoke Unity in batch mode and must be restricted to trusted branches because repository workflows execute code on the host.
+References:
+- Unity license activation methods: https://docs.unity.com/en-us/engine/6000.3/manual/get-started/install-and-upgrade/licenses-and-activation/license-activation-methods
+- GameCI activation notes: https://game.ci/docs/3/github/activation/
 
-## Cost and privacy
+## Windows self-hosted fallback
 
-- Standard GitHub-hosted runners are free for public repositories; private repositories use the account's included Actions quota and may incur charges after the allowance.
-- Self-hosted runner compute is hosted on the developer's own PC. GitHub's Actions platform billing policy may still apply depending on the plan and current pricing; verify current billing before enabling it.
-- Do not expose a self-hosted runner to untrusted pull requests. Run it only for trusted pushes or manual dispatch from a protected branch.
-- Keep the repository private if source confidentiality is required. Public-repository free runner availability is not a reason to expose proprietary game code.
+The workflow `.github/workflows/android-apk-self-hosted.yml` is restricted to manual dispatch and requires a runner with labels `self-hosted`, `Windows`, `X64`, and `charso-unity-android`. It invokes the exact Unity Editor version declared in `ProjectSettings/ProjectVersion.txt` in batch mode. The project build entry point `Assets/Editor/BuildCommand.cs` will be added with the Unity runtime foundation.
 
-## Artifact delivery
+Setup, once the Unity project version is fixed:
+1. Install that exact Unity Editor version through Unity Hub.
+2. Include Android Build Support, Android SDK & NDK Tools, and OpenJDK.
+3. Activate Unity Personal through Unity Hub on the Windows account that will run the runner.
+4. In GitHub, open **Settings → Actions → Runners → New self-hosted runner**, choose Windows x64, and configure it on this PC.
+5. Add the custom runner label `charso-unity-android`.
+6. Run the runner under the same Windows account that owns the Unity Hub activation. Keep it online only when you want to build.
 
-After a successful workflow run, open the run under **Actions** and download the `Charso-Android-APK` artifact. The artifact is a ZIP containing the APK output. An artifact is not a Play Store/Myket release and is not a signed production release unless a separate secure signing and release pipeline is added.
+Self-hosted jobs execute repository code on the PC. Do not enable pull-request triggers for this runner, do not run untrusted branches, and do not expose it to public contributors. Only manually dispatch from a trusted branch after reviewing the code.
 
-## Current verification status
+GitHub currently lists self-hosted runner compute as free independently of included hosted compute usage. The developer PC supplies the hardware, power, and internet connection.
 
-- Workflow and documentation are prepared as an initial pipeline scaffold.
-- No Unity project exists yet, so no Unity compilation or APK build has been run.
-- Cloud license activation has not been configured or validated.
+## Artifact delivery and signing
+
+After a successful run, download the `Charso-Android-APK` artifact from the GitHub Actions run. It is a ZIP containing the APK. This initial pipeline is for test APKs; production signing, secure keystore storage, Myket/Cafe Bazaar release, and store submission will be separate protected steps. Never commit a keystore or signing password.
+
+## Verification status
+
+- Cloud workflow scaffold committed; no cloud Unity license configured or validated.
+- Windows self-hosted workflow scaffold committed; it cannot run until the Unity project, matching Editor, runner, and build entry point exist.
+- No Unity compilation or APK build has been run.
 - Android device installation and gameplay QA remain pending.
