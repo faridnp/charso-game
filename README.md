@@ -51,6 +51,10 @@ None of those items is a claim that Unity compilation, tests, APK generation, or
 - [Security threat model](docs/SECURITY_THREAT_MODEL.md)
 - [Engine and Android delivery decision](docs/DECISIONS/0001-engine-and-android-delivery.md)
 
+## Open and run in Unity
+
+Follow the [Unity Quick Start](docs/UNITY_QUICKSTART.md) for the exact editor version, project import, first-scene generation, Play Mode, and EditMode tests. The first playable scene is generated from the Unity menu: **Charso → Generate First Playable Scene**.
+
 ## Development
 
 Unity 6.3 LTS is the selected editor line. The exact patch in ProjectSettings/ProjectVersion.txt is pinned for reproducibility and must match the installed Editor. Android builds use a trusted Windows self-hosted runner with Android Build Support.
