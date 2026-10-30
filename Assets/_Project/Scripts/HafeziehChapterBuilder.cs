@@ -16,6 +16,7 @@ namespace Charso
         static readonly Color Water=new Color(.15f,.4f,.48f);
         static readonly Color Garden=new Color(.22f,.38f,.25f);
         static readonly Color Orange=new Color(.78f,.38f,.12f);
+        static readonly Color Wood=new Color(.32f,.22f,.14f);
         static readonly Dictionary<Color,Material> Materials=new Dictionary<Color,Material>();
 
         public static void Build(int reconstructionStage=0)
@@ -140,7 +141,9 @@ namespace Charso
 
         static void BuildStageDetails(Transform root)
         {
-            var pavilion=root.Find("Eight column tomb pavilion");\n            if(pavilion!=null)pavilion.gameObject.SetActive(false);\n            var stage0=Child(root,"ReconstructionStage_0");
+            var pavilion=root.Find("Eight column tomb pavilion");
+            if(pavilion!=null)pavilion.gameObject.SetActive(false);
+            var stage0=Child(root,"ReconstructionStage_0");
             Box(stage0,"Survey base plan",new Vector3(0,.04f,12),new Vector3(8,.08f,7),new Color(.56f,.5f,.4f));
             var stage1=Child(root,"ReconstructionStage_1");
             Box(stage1,"Tomb pavilion temporary roof frame",new Vector3(0,10.8f,12),new Vector3(4.8f,.16f,4.8f),Wood);
