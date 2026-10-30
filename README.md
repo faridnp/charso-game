@@ -1,53 +1,54 @@
-# Charso — Persian Word Puzzle & Iranian Heritage Restoration
+# Charso — چهارسو
 
-> Working title: **Charso** (چهارسو)  
-> Working city: **Mehrgan** (مهرگان)  
-> Status: first Unity runtime prototype added; not yet editor-compiled or device-tested.
+**A Persian-first Android word-puzzle adventure about Iranian heritage.**
 
-Charso is a Persian-first Android word puzzle game combining original vocabulary challenges with a respectful restoration-inspired journey through real, documented Iranian heritage.
+Charso is being developed as a real consumer game, not a UI demo. The goal is a polished, culturally respectful experience that combines authored Persian word puzzles, meaningful progression, and visually rewarding restoration of documented Iranian heritage in the fictional city of Mehrgan.
 
-## First playable prototype
+## Production status
 
-A small Unity 6.3 LTS project is now present on the feature/first-playable-mvp branch. The prototype includes five hand-authored Persian word puzzles, letter selection and answer checking, hints, soft-coin rewards, a three-step conceptual Hafezieh restoration loop, and local JSON progress persistence.
+The original five-level bootstrap is a throwaway first-playable prototype and is **not release-ready**. The production branch is being rebuilt around testable gameplay rules, safe progression, Persian text correctness, authored content, and measurable device quality.
 
-See [First Playable](docs/FIRST_PLAYABLE.md) for scope, limitations, and run/build instructions. This is an early gameplay prototype, not a release candidate.
+Current production work includes:
+- A separate pure C# domain core for Persian comparison, puzzle validation, and idempotent reward transactions.
+- EditMode tests for Persian normalization, answer validation, tile selection, and reward invariants.
+- A release quality bar, content bible, QA device matrix, and ordered production backlog.
+- A trusted Windows self-hosted workflow that runs Unity EditMode tests before producing an Android artifact.
 
-## Non-negotiable product pillars
+None of those items is a claim that Unity compilation, tests, APK generation, or device QA have already passed. The Unity Editor and runner must execute the project to verify them.
 
-1. **Heritage authenticity:** player-buildable landmarks must be real, documented historic buildings, bridges, gardens, or architectural complexes from Iran. No invented fantasy buildings or contemporary apartment/office blocks as buildable landmarks.
-2. **Original game identity:** do not copy another game's levels, UI, art, story, text, progression, or assets.
-3. **Persian-first quality:** correct Persian typography, RTL layout, normalization, culturally appropriate writing, and accessible mobile UI.
-4. **Modular delivery:** independent systems, explicit contracts, small pull requests, automated checks, and clear ownership.
-5. **Security and fair monetization:** purchases and premium entitlements require trusted verification; valuable balances must not be trusted to the client; rewarded ads grant rewards only after verified completion.
-6. **Measured performance:** define device tiers and measurable frame-time, memory, startup, thermal, and crash targets. Never claim universal compatibility without device testing.
+## Game identity
 
-## Initial gameplay direction
+- **Title:** چهارسو (Charso)
+- **World hub:** مهرگان (Mehrgan), a fictional connected game city.
+- **Core loop:** solve a curated Persian word puzzle → earn resources → choose a restoration action → see a real, sourced Iranian heritage place change → unlock the next story beat.
+- **Buildable heritage:** only real, documented Iranian historic sites. Hybrid means regional and historical variety, never fantasy or modern buildings presented as historic.
+- **MVP focus:** one complete, polished vertical slice before broad content expansion.
 
-Solve a Persian word puzzle → earn soft currency / restoration progress → restore a documented Iranian landmark → unlock the next area, story, or character.
+## Non-negotiable standards
 
-Match-3 and other secondary mechanics remain outside the initial MVP until validated by product tests.
+- Correct Persian shaping, RTL, punctuation, numerals, ZWNJ, and mixed-direction display.
+- Original art, writing, puzzle design, and code; no assets extracted from other games.
+- Provenance and distribution rights for every shipped font, image, model, texture, and audio file.
+- Versioned, recoverable saves and idempotent rewards.
+- Paid purchases and premium entitlements verified by a trusted authority; no secrets in the APK.
+- Rewarded ads never grant rewards on no-fill, failure, early close, or missing reward callback.
+- Measured performance on declared Android device tiers; no claim of universal compatibility.
 
-## Heritage rule
+## Production documents
 
-The city of Mehrgan is fictional as a game map, but its buildable landmarks must be real Iranian heritage. “Hybrid” means a curated variety of authentic regional and historical Iranian styles—not modern or fantasy buildable architecture.
+- [Release quality bar](docs/RELEASE_QUALITY_BAR.md)
+- [Content bible](docs/CONTENT_BIBLE.md)
+- [Production backlog](docs/PRODUCTION_BACKLOG.md)
+- [Android QA device matrix](docs/QA_DEVICE_MATRIX.md)
+- [Game design](docs/GAME_DESIGN.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Heritage asset pipeline](docs/HERITAGE_ASSET_PIPELINE.md)
+- [Android build pipeline](docs/BUILD_PIPELINE.md)
 
-Hafezieh is the first conceptual restoration candidate in the prototype. No historically accurate model, photograph, scan, or approved asset is included yet. A documented source pack, rights/provenance review, and visual accuracy review remain mandatory before production assets are made.
+## Development
 
-## Technology
+Unity 6.3 LTS is the selected editor line. The exact patch in ProjectSettings/ProjectVersion.txt is pinned for reproducibility and must match the installed Editor. Android builds use a trusted Windows self-hosted runner with Android Build Support.
 
-- Unity 6.3 LTS, C#, and uGUI for the initial Android prototype.
-- Portrait-first UI; future isometric city presentation remains a separate validated milestone.
-- Myket and Cafe Bazaar adapters, backend, dictionary licensing, and production analytics are not implemented.
-- The current local prototype economy is not suitable for paid currency or competitive use.
+## Verification status
 
-## Repository workflow
-
-- main is the protected, releasable line.
-- Work happens in focused feature, docs, or fix branches.
-- Changes enter the release line through pull requests after review and required checks.
-- Never commit secrets, signing keys, keystores, service-role keys, private purchase tokens, or production credentials.
-- Do not commit generated Unity folders such as Library, Temp, Obj, Build, or local IDE state.
-
-## Current verification
-
-The Unity project scaffold and initial gameplay source are committed for review. Unity Editor compilation, Android APK generation, and physical-device QA have **not** yet been run. See [Android Build Pipeline](docs/BUILD_PIPELINE.md).
+**Not yet verified:** Unity Editor import/compile, EditMode test execution, Android APK build, Persian rendering on devices, performance, store SDK integrations, and release readiness. A green documentation workflow is not a Unity build or a release sign-off.
