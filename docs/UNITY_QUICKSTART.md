@@ -25,7 +25,7 @@ The repository contains the first playable scene at `Assets/_Project/Scenes/Char
 1. In the Project panel, expand `Assets` → `_Project` → `Scenes`.
 2. Double-click `Charso.unity`. The Hierarchy should show a `CharsoGame` object.
 3. Confirm the Console has no red errors.
-4. Press the **Play** triangle. The bootstrap creates the Mehrgan city blockout, Persian puzzle interface, coin balance, restoration progress and city shop at runtime.
+4. Press the **Play** triangle. The game builds the animated Mehrgan world, renders the live 3D city inside the chapter card, and displays the Persian RTL puzzle HUD, coin balance, restoration progress and shop.
 5. Select the letter tiles in order, press `بررسی پاسخ`, and use `بازار شهر` to open the local restoration shop. Camera exploration supports mouse drag/scroll in the Editor and touch gestures on devices.
 
 If you accidentally opened an empty scene, the runtime entry point also starts Charso automatically when Play begins. For editor navigation, use **Charso → Open Main Game Scene** or **Charso → Play Main Game**. The separate Hafezieh research blockout can still be generated from `Charso → Generate Hafezieh Research Blockout`; it is not the main Mehrgan gameplay scene.
