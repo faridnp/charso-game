@@ -35,6 +35,7 @@ namespace Charso
             Materials.Clear();
             root = new GameObject("MehrganWorld").transform;
             root.position = Vector3.zero;
+            root.localScale = Vector3.one * .72f;
             dynamicRoot = Child(root, "Animated details");
 
             BuildGroundAndStreets();
@@ -56,11 +57,11 @@ namespace Charso
             stage = Mathf.Clamp(stage, 0, 3);
             var site = GameObject.Find("MehrganLandmarkSite");
             if (site == null) return;
-            var before = site.Find("RestorationStage_" + Mathf.Clamp(stage - 1, 0, 2));
-            var current = site.Find("RestorationStage_" + stage);
+            var before = site.transform.Find("RestorationStage_" + Mathf.Clamp(stage - 1, 0, 2));
+            var current = site.transform.Find("RestorationStage_" + stage);
             for (int i = 0; i < 4; i++)
             {
-                var item = site.Find("RestorationStage_" + i);
+                var item = site.transform.Find("RestorationStage_" + i);
                 if (item != null) item.gameObject.SetActive(i == stage);
             }
         }
@@ -358,8 +359,8 @@ namespace Charso
             if(camera==null) camera=new GameObject("Main Camera",typeof(Camera)).GetComponent<Camera>();
             camera.tag="MainCamera";
             camera.orthographic=true;
-            camera.orthographicSize=27;
-            camera.transform.position=new Vector3(34,39,-42);
+            camera.orthographicSize=36;
+            camera.transform.position=new Vector3(28,38,-34);
             camera.transform.rotation=Quaternion.Euler(39,-39,0);
             camera.backgroundColor=new Color(.55f,.69f,.75f);
             camera.clearFlags=CameraClearFlags.SolidColor;
