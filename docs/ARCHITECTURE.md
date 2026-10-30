@@ -2,7 +2,7 @@
 
 ## Status
 
-This is a proposed architecture for pre-production. It does not mean a Unity project or production backend already exists. Exact Unity editor patch, Android toolchain, backend, and third-party packages must be validated and recorded before implementation is locked.
+The Unity scaffold exists, but the first-playable bootstrap is prototype-only. The production branch introduces a separate pure C# domain assembly (Charso.Core) and EditMode tests. The Editor compile and tests have not yet been executed. Unity 6.3 LTS is the selected editor line; exact package versions and the Android toolchain remain subject to import/build verification.
 
 ## Proposed technology shape
 
