@@ -13,7 +13,7 @@ This is the ordered implementation plan. Work should proceed through complete ve
 
 ## P1 — polished core game loop
 
-- [ ] Proper Persian text system and approved font/license (candidate evaluation documented in `RTL_TEXT_PIPELINE.md`; current UGUI text remains a blocker).
+- [x] Integrate RTLTMPro v4.0.0 and bundle the Vazirmatn Regular font with its license; Unity rendering and Android-device QA remain open.
 - [ ] Navigation/state machine: boot, onboarding, home, district, puzzle, reward, restoration, settings, pause.
 - [x] Add 200 original Persian word puzzles beyond the 20-level opening arc (220 total), with topic/difficulty metadata and automated structural/tile-inventory tests. Native editorial approval remains open.
 - [ ] Data-driven puzzle and hint definitions.
@@ -21,7 +21,7 @@ This is the ordered implementation plan. Work should proceed through complete ve
 - [x] Transactional local save with v1/v2 migration, schema-v3 city ownership and corruption recovery.
 - [x] Local economy ledger, one-time puzzle rewards, difficulty scaling and idempotent city-project purchases.
 - [ ] Full first-session tutorial.
-- [ ] Responsive portrait UI for phone/tablet.
+- [ ] Verify the new responsive portrait RTL HUD on phone and tablet aspect ratios, then tune safe areas and touch targets.
 - [ ] Audio settings, feedback, accessibility, pause/resume.
 
 ## P2 — real heritage vertical slice
@@ -30,7 +30,7 @@ This is the ordered implementation plan. Work should proceed through complete ve
 - [x] Create a sourced Hafezieh research dossier and separate proportional chapter blockout (historical and rights approval still pending).
 - [ ] Obtain measured plans, rights-cleared references, and specialist review before final art.
 - [ ] Build a performant, original 3D environment and restoration-stage variants.
-- [ ] Add camera movement, focal framing, environmental ambience, and clear progression feedback.
+- [x] Add isometric city camera movement, ambient city animation, live 3D chapter preview and visible restoration/progression feedback; final art and device profiling remain open.
 - [ ] Add original characters and reviewed story beats.
 - [x] Integrate puzzle rewards and the local city-project shop with persistent visual blockout unlocks.\n- [ ] Replace project blockout props with optimized authored art and profile device performance.
 
