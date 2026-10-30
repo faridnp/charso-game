@@ -33,13 +33,7 @@ namespace Charso {
    new PuzzleLevel{Id=19,Clue="بخش پوشیده و گذرگاه‌مانند در بازار سنتی.",Answer="راسته",Letters=new[]{"ر","ا","س","ت","ه"},Topic="معماری",Difficulty=2},
    new PuzzleLevel{Id=20,Clue="فضای چهاربخشی باغ ایرانی با محورهای آب و مسیر.",Answer="چهارباغ",Letters=new[]{"چ","ه","ا","ر","ب","ا","غ"},Topic="معماری",Difficulty=2}
   };
-  public static readonly PuzzleLevel[] Levels = BuildLevels();
-  static PuzzleLevel[] BuildLevels() {
-   var all = new List<PuzzleLevel>(OpeningLevels.Length + 200);
-   all.AddRange(OpeningLevels);
-   all.AddRange(WordPuzzleExtendedContent.Create());
-   return all.ToArray();
-  }
+  public static readonly PuzzleLevel[] Levels = OpeningLevels;
   // The first four restoration milestones map to the four authored tutorial states.
   // Later puzzle rewards accumulate for the city-project economy; they do not charge for a capped visual stage.
   public static bool RequiresRestoration(int levelIndex) => levelIndex >= 0 && levelIndex < 20 && (levelIndex + 1) % 5 == 0;
