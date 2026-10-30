@@ -24,7 +24,7 @@ The player should always know: What am I doing? Why am I doing it? What do I get
 
 The first vertical slice is one coherent, polished neighborhood story, not a city full of empty buttons:
 - One tutorial arc.
-- 15–25 editorially reviewed puzzle levels, with difficulty ramp and answer alternatives.
+- 15–25 editorially reviewed puzzle levels for the first polished vertical slice. The current branch now includes 220 draft Persian word puzzles (20 opening + 200 extended); structural checks cover unique IDs/answers, clue presence, metadata and exact letter inventory. All 200 new clues still require native Persian editorial review for ambiguity, spelling, tone, difficulty and accepted alternatives before release.
 - One landmark with a verified research dossier and licensed/original visual reference pack.
 - 3–5 restoration stages with distinct, visible environment changes.
 - 2–3 original supporting characters with reviewed Persian dialogue.
