@@ -53,10 +53,10 @@ namespace Charso.Tests
         }
 
         [Test]
-        public void RestorationMilestonesAreLimitedToFourOpeningVisualStages()
+        public void RestorationMilestonesAreLimitedToThreeVisibleTransitions()
         {
             for (int i = 0; i < WordPuzzle.Levels.Length; i++)
-                Assert.AreEqual(i < 20 && (i + 1) % 5 == 0, WordPuzzle.RequiresRestoration(i), "Level index " + i);
+                Assert.AreEqual(i < 15 && (i + 1) % 5 == 0, WordPuzzle.RequiresRestoration(i), "Level index " + i);
         }
     }
 }
