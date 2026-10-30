@@ -18,6 +18,16 @@ REQUIRED_FILES = (
     "Assets/_Project/Resources/Fonts/Vazirmatn-Regular.ttf",
     "Assets/_Project/Scripts/RTLTMPro/RTLTextMeshPro.cs",
     "Assets/_Project/Scripts/RTLTMPro/GlyphFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/Char32Utils.cs",
+    "Assets/_Project/Scripts/RTLTMPro/FastStringBuilder.cs",
+    "Assets/_Project/Scripts/RTLTMPro/GlyphTable.cs",
+    "Assets/_Project/Scripts/RTLTMPro/LigatureFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/RTLSupport.cs",
+    "Assets/_Project/Scripts/RTLTMPro/RTLTextMeshPro3D.cs",
+    "Assets/_Project/Scripts/RTLTMPro/RichTextFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/TashkeelFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/TashkeelLocation.cs",
+    "Assets/_Project/Scripts/RTLTMPro/TextUtils.cs",
     "Assets/_Project/Scripts/RTLTMPro/LICENSE.txt",
     "THIRD_PARTY_NOTICES.md",
     "ProjectSettings/EditorBuildSettings.asset",
@@ -105,6 +115,8 @@ def check_persian_presentation(errors: list[str]) -> None:
         errors.append("RTLTMPro must be vendored in Assets; do not require a remote Git package clone.")
     if "Unity.TextMeshPro" not in asmdef.get("references", []):
         errors.append("Charso.Runtime must reference Unity.TextMeshPro.")
+    if "RTLTMPro" in asmdef.get("references", []):
+        errors.append("Vendored RTLTMPro source must compile inside Charso.Runtime, not require a remote assembly.")
 
     bootstrap = bootstrap_path.read_text(encoding="utf-8")
     required_runtime_markers = (
