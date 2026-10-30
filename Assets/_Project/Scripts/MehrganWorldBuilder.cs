@@ -138,8 +138,9 @@ namespace Charso
             string[] ids={"fountain","bazaar","garden","homes","workshop","gate","courtyard","landmark"};
             foreach(string id in ids)
             {
-                var group=GameObject.Find("MehrganWorld/CityProject_"+id);
-                if(group!=null) group.SetActive(owned.Contains(id));
+                var world=GameObject.Find("MehrganWorld");
+                var group=world!=null?world.transform.Find("CityProject_"+id):null;
+                if(group!=null) group.gameObject.SetActive(owned.Contains(id));
             }
         }
 
