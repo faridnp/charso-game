@@ -11,6 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = (
     "README.md",
+    "Assets/_Project/Scenes/Charso.unity",
+    "Assets/_Project/Scenes/Charso.unity.meta",
+    "Assets/_Project/Scripts/CharsoGameBootstrap.cs.meta",
+    "ProjectSettings/EditorBuildSettings.asset",
     "AI_WORKFLOW.md",
     "CONTRIBUTING.md",
     "SECURITY.md",
@@ -48,6 +52,28 @@ def check_required_files(errors: list[str]) -> None:
     for relative in REQUIRED_FILES:
         if not (ROOT / relative).is_file():
             errors.append(f"Missing required file: {relative}")
+
+
+
+def check_playable_scene(errors: list[str]) -> None:
+    scene_path = ROOT / "Assets/_Project/Scenes/Charso.unity"
+    scene_meta_path = ROOT / "Assets/_Project/Scenes/Charso.unity.meta"
+    bootstrap_meta_path = ROOT / "Assets/_Project/Scripts/CharsoGameBootstrap.cs.meta"
+    build_settings_path = ROOT / "ProjectSettings/EditorBuildSettings.asset"
+    if not all(p.is_file() for p in (scene_path, scene_meta_path, bootstrap_meta_path, build_settings_path)):
+        return
+    scene = scene_path.read_text(encoding="utf-8")
+    scene_meta = scene_meta_path.read_text(encoding="utf-8")
+    bootstrap_meta = bootstrap_meta_path.read_text(encoding="utf-8")
+    build_settings = build_settings_path.read_text(encoding="utf-8")
+    scene_guid_match = re.search(r"(?m)^guid: ([0-9a-f]{32})$", scene_meta)
+    bootstrap_guid_match = re.search(r"(?m)^guid: ([0-9a-f]{32})$", bootstrap_meta)
+    if not scene_guid_match or scene_guid_match.group(1) not in build_settings:
+        errors.append("Playable scene GUID is missing from EditorBuildSettings.asset.")
+    if not bootstrap_guid_match or f"guid: {bootstrap_guid_match.group(1)}" not in scene:
+        errors.append("Playable scene does not reference CharsoGameBootstrap.cs.")
+    if "m_Name: CharsoGame" not in scene:
+        errors.append("Playable scene is missing the CharsoGame bootstrap object.")
 
 
 def check_markdown_links(errors: list[str]) -> None:
@@ -94,6 +120,7 @@ def check_text_safety(errors: list[str]) -> None:
 def main() -> int:
     errors: list[str] = []
     check_required_files(errors)
+    check_playable_scene(errors)
     check_markdown_links(errors)
     check_text_safety(errors)
 
