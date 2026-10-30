@@ -1,0 +1,6 @@
+# Repository-wide default owner. Add the collaborator's GitHub handle after access is granted.
+* @faridnp
+
+# Security-sensitive and release pipeline files remain under project-owner review.
+.github/ @faridnp
+SECURITY.md @faridnp
