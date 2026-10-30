@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+ using UnityEngine.EventSystems;
 namespace Charso {
  public sealed class CharsoGameBootstrap:MonoBehaviour {
   PlayerProgress p; readonly List<int> picks=new List<int>(); readonly List<Button> letterButtons=new List<Button>();
   Text coins,clue,answer,status,stage; Transform letters; Button submit,hint,restore,next; int solvedIndex=-1; bool restored;
-  void Awake(){Application.targetFrameRate=60;MehrganWorldBuilder.Build();p=SaveSystem.Load();solvedIndex=p.CurrentLevelSolved?p.LevelIndex:-1;restored=p.CurrentLevelRestored;BuildUI();Refresh();}
+  void Awake(){Application.targetFrameRate=60;p=SaveSystem.Load();MehrganWorldBuilder.Build(p.RestorationStage);EnsureEventSystem();solvedIndex=p.CurrentLevelSolved?p.LevelIndex:-1;restored=p.CurrentLevelRestored;BuildUI();Refresh();}
   void BuildUI(){
    var c=new GameObject("Canvas",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster)).GetComponent<Canvas>();c.renderMode=RenderMode.ScreenSpaceOverlay;
    var sc=c.GetComponent<CanvasScaler>();sc.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;sc.referenceResolution=new Vector2(720,1280);sc.matchWidthOrHeight=.5f;
@@ -38,8 +39,9 @@ namespace Charso {
   void Clear(){picks.Clear();foreach(var b in letterButtons)b.interactable=true;answer.text="؟";}
   void Check(){if(!WordPuzzle.IsCorrect(WordPuzzle.Levels[p.LevelIndex],JoinPicks())){status.text="این پاسخ درست نیست؛ دوباره تلاش کن.";return;}solvedIndex=p.LevelIndex;p.CurrentLevelSolved=true;p.SolvedLevels++;p.Coins+=8;SaveSystem.Store(p);Refresh();status.text="درست است! ۸ سکه گرفتی.";}
   void Hint(){if(p.Coins<3||solvedIndex==p.LevelIndex)return;p.Coins-=3;SaveSystem.Store(p);coins.text="سکه: "+p.Coins;status.text="راهنمایی: واژه با «"+WordPuzzle.Levels[p.LevelIndex].Answer.Substring(0,1)+"» آغاز می‌شود.";hint.interactable=p.Coins>=3;}
-  void Restore(){if(solvedIndex!=p.LevelIndex||restored||p.Coins<10||p.RestorationStage>=3)return;p.Coins-=10;p.RestorationStage++;restored=true;p.CurrentLevelRestored=true;SaveSystem.Store(p);Refresh();}
+  void Restore(){if(solvedIndex!=p.LevelIndex||restored||p.Coins<10||p.RestorationStage>=3)return;p.Coins-=10;p.RestorationStage++;restored=true;p.CurrentLevelRestored=true;SaveSystem.Store(p);MehrganWorldBuilder.ApplyRestorationStage(p.RestorationStage);Refresh();}
   void Next(){if(!restored||p.LevelIndex>=WordPuzzle.Levels.Length-1)return;p.LevelIndex++;solvedIndex=-1;restored=false;p.CurrentLevelSolved=false;p.CurrentLevelRestored=false;picks.Clear();SaveSystem.Store(p);Refresh();}
+  static void EnsureEventSystem(){if(EventSystem.current!=null)return;new GameObject("EventSystem",typeof(EventSystem),typeof(StandaloneInputModule));}
   static GameObject Panel(Transform parent,string name,Color color){var g=new GameObject(name,typeof(RectTransform),typeof(Image));g.transform.SetParent(parent,false);g.GetComponent<Image>().color=color;return g;}
   static Text Label(Transform parent,string value,int size,Color color){var g=new GameObject("Text",typeof(RectTransform),typeof(Text));g.transform.SetParent(parent,false);var t=g.GetComponent<Text>();t.font=Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");t.text=value;t.fontSize=size;t.color=color;t.alignment=TextAnchor.MiddleCenter;t.horizontalOverflow=HorizontalWrapMode.Wrap;t.verticalOverflow=VerticalWrapMode.Truncate;t.resizeTextForBestFit=true;t.resizeTextMinSize=14;t.resizeTextMaxSize=size;t.raycastTarget=false;return t;}
   static Button Btn(Transform parent,string text,Color bg,Color fg,int size){var g=new GameObject("Button",typeof(RectTransform),typeof(Image),typeof(Button));g.transform.SetParent(parent,false);g.GetComponent<Image>().color=bg;var b=g.GetComponent<Button>();var c=b.colors;c.normalColor=bg;c.highlightedColor=Color.Lerp(bg,Color.white,.15f);c.pressedColor=Color.Lerp(bg,Color.black,.12f);b.colors=c;var t=Label(g.transform,text,size,fg);Stretch(t.rectTransform);return b;}
