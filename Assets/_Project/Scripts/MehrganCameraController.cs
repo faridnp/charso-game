@@ -23,8 +23,8 @@ namespace Charso
             HandleMouse();
             cam.orthographicSize=Mathf.Clamp(cam.orthographicSize, minZoom,maxZoom);
             Vector3 p=transform.position;
-            p.x=Mathf.Clamp(p.x,12f,39f);
-            p.z=Mathf.Clamp(p.z,-39f,-10f);
+            p.x=Mathf.Clamp(p.x,-15f,50f);
+            p.z=Mathf.Clamp(p.z,-55f,20f);
             transform.position=p;
         }
 
