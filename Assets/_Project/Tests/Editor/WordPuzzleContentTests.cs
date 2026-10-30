@@ -1,32 +1,35 @@
 using NUnit.Framework;
 using Charso.Core;
+using System.Collections.Generic;
 
 namespace Charso.Tests
 {
     public sealed class WordPuzzleContentTests
     {
         [Test]
-        public void FirstChapterContainsTwentyUniquePuzzleIds()
+        public void OpeningArcAndExtendedBankContainTwoHundredTwentyUniqueIds()
         {
-            Assert.AreEqual(20, WordPuzzle.Levels.Length);
-            var ids = new System.Collections.Generic.HashSet<int>();
+            Assert.AreEqual(220, WordPuzzle.Levels.Length);
+            var ids = new HashSet<int>();
             foreach (PuzzleLevel level in WordPuzzle.Levels)
                 Assert.IsTrue(ids.Add(level.Id), "Duplicate puzzle ID: " + level.Id);
+            for (int i = 0; i < WordPuzzle.Levels.Length; i++)
+                Assert.AreEqual(i + 1, WordPuzzle.Levels[i].Id, "Puzzle IDs must be contiguous.");
         }
 
         [Test]
-        public void EveryAuthoredAnswerCanBeFormedFromItsTiles()
+        public void EveryAnswerCanBeFormedFromItsExactLetterInventory()
         {
             foreach (PuzzleLevel level in WordPuzzle.Levels)
             {
                 var definition = new PuzzleDefinition
                 {
-                    Id = "charso.chapter1." + level.Id,
+                    Id = "charso.word." + level.Id,
                     Revision = 1,
                     Clue = level.Clue,
                     LetterTiles = level.Letters,
                     AcceptedAnswers = new[] { level.Answer },
-                    EditorialStatus = "review"
+                    EditorialStatus = "draft"
                 };
                 Assert.IsTrue(PuzzleEngine.IsDefinitionValid(definition, out string error),
                     "Puzzle " + level.Id + " (" + level.Answer + "): " + error);
@@ -34,10 +37,26 @@ namespace Charso.Tests
         }
 
         [Test]
-        public void RestorationIsRequiredOnlyAtFivePuzzleMilestones()
+        public void ExtendedBankContainsTwoHundredUniqueAnswersWithMetadata()
+        {
+            var answers = new HashSet<string>();
+            for (int i = 20; i < WordPuzzle.Levels.Length; i++)
+            {
+                PuzzleLevel level = WordPuzzle.Levels[i];
+                Assert.IsTrue(answers.Add(PersianText.NormalizeForMatch(level.Answer)),
+                    "Duplicate extended answer: " + level.Answer);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(level.Clue), "Missing clue at ID " + level.Id);
+                Assert.IsTrue(level.Difficulty >= 1 && level.Difficulty <= 3, "Invalid difficulty at ID " + level.Id);
+                Assert.IsFalse(string.IsNullOrWhiteSpace(level.Topic), "Missing topic at ID " + level.Id);
+            }
+            Assert.AreEqual(200, answers.Count);
+        }
+
+        [Test]
+        public void RestorationMilestonesAreLimitedToFourOpeningVisualStages()
         {
             for (int i = 0; i < WordPuzzle.Levels.Length; i++)
-                Assert.AreEqual((i + 1) % 5 == 0, WordPuzzle.RequiresRestoration(i), "Level index " + i);
+                Assert.AreEqual(i < 20 && (i + 1) % 5 == 0, WordPuzzle.RequiresRestoration(i), "Level index " + i);
         }
     }
 }
