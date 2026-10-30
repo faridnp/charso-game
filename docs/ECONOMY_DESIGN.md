@@ -35,20 +35,20 @@ The player earns the ordinary soft currency by solving puzzles. Currency is spen
 
 | Project | Target visible change | Draft cost |
 |---|---|---:|
-| Restore central fountain | Repaired basin, water and lighting state | 40 |
-| Renew bazaar canopy | Repaired roof bays and shop fronts | 60 |
-| Replant Chahar Bagh | Garden beds, trees and water channels | 50 |
-| Repair residential facades | Doors, plaster and window details | 80 |
-| Equip restoration workshop | Workbench and material storage | 70 |
-| Renew city gate | Gate surface, doors and lanterns | 100 |
-| Restore civic courtyard | Paving, arcade and water feature | 120 |
-| Complete landmark chapter | Final approved chapter stages | 150 |
+| Restore central fountain | Repaired basin, water and lighting state | 130 |
+| Renew bazaar canopy | Repaired roof bays and shop fronts | 180 |
+| Replant Chahar Bagh | Garden beds, trees and water channels | 160 |
+| Repair residential facades | Doors, plaster and window details | 220 |
+| Equip restoration workshop | Workbench and material storage | 180 |
+| Renew city gate | Gate surface, doors and lanterns | 250 |
+| Restore civic courtyard | Paving, arcade and water feature | 300 |
+| Complete landmark chapter | Final approved chapter stages | 350 |
 
-Costs are balancing hypotheses, not final prices. Every project must have a real, persistent visual state change before it can be sold. Never charge for a capped or already-owned visual stage. The current blockout only has three generic landmark restoration states; the catalog above is not yet integrated into the runtime city and must not be presented as implemented.
+The eight draft project costs total 1,770 coins, leaving a small reserve from the 1,890-coin full-clear path. Costs are balancing hypotheses, not final prices. Every project must have a real, persistent visual state change before it can be sold. Never charge for a capped or already-owned visual stage. The current blockout only has three generic landmark restoration states; the catalog above is not yet integrated into the runtime city and must not be presented as implemented.
 
 ## Economy sanity checks
 
-- With 200 new puzzles, the extended bank can award 1,600–2,400 coins before hints, depending on difficulty distribution.
+- The current 200-puzzle draft bank awards 1,730 coins at its authored difficulty mix (143 easy × 8, 49 medium × 10, 8 hard × 12), before hints. The 20 opening puzzles add 160 coins, for 1,890 total across all 220.
 - At the proposed ad cap, ads add at most 60 coins per server day.
 - The coin sources and sinks must be simulated across a full chapter before locking prices. Measure time-to-first-project, time-to-each-project, unused balance, hint usage and ad opt-in rate.
 - Do not tune the economy to pressure players into watching ads or paying. Ensure a free-play path exists for every core progression gate.
