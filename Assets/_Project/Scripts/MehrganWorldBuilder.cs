@@ -46,7 +46,7 @@ namespace Charso
             BuildLandmarkDistrict(restorationStage);
             BuildVegetation();
             BuildCityProjectVisuals();
-            BuildLightingAndCamera();
+            LightingAndCamera();
             ApplyRestorationStage(restorationStage);
             if(root.GetComponent<MehrganAmbientAnimator>()==null)root.gameObject.AddComponent<MehrganAmbientAnimator>();
         }
@@ -492,7 +492,7 @@ namespace Charso
             camera.nearClipPlane=.1f;
             camera.farClipPlane=180;
             if(camera.GetComponent<MehrganCameraController>()==null)camera.gameObject.AddComponent<MehrganCameraController>();
-            var light=UnityEngine.Object.FindObjectOfType<Light>();
+            var light=UnityEngine.Object.FindFirstObjectByType<Light>();
             if(light==null) light=new GameObject("Mehrgan sun",typeof(Light)).GetComponent<Light>();
             light.type=LightType.Directional;
             light.intensity=1.15f;
