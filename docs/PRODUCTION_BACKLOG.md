@@ -18,8 +18,8 @@ This is the ordered implementation plan. Work should proceed through complete ve
 - [x] Add 200 original Persian word puzzles beyond the 20-level opening arc (220 total), with topic/difficulty metadata and automated structural/tile-inventory tests. Native editorial approval remains open.
 - [ ] Data-driven puzzle and hint definitions.
 - [ ] Deterministic puzzle engine with accepted answers and duplicate protection.
-- [ ] Transactional local save with migration and corruption recovery.
-- [ ] Economy ledger and idempotent reward transactions.
+- [x] Transactional local save with v1/v2 migration, schema-v3 city ownership and corruption recovery.
+- [x] Local economy ledger, one-time puzzle rewards, difficulty scaling and idempotent city-project purchases.
 - [ ] Full first-session tutorial.
 - [ ] Responsive portrait UI for phone/tablet.
 - [ ] Audio settings, feedback, accessibility, pause/resume.
@@ -32,15 +32,15 @@ This is the ordered implementation plan. Work should proceed through complete ve
 - [ ] Build a performant, original 3D environment and restoration-stage variants.
 - [ ] Add camera movement, focal framing, environmental ambience, and clear progression feedback.
 - [ ] Add original characters and reviewed story beats.
-- [ ] Integrate the puzzle/reward/restoration loop with the 3D environment.
+- [x] Integrate puzzle rewards and the local city-project shop with persistent visual blockout unlocks.\n- [ ] Replace project blockout props with optimized authored art and profile device performance.
 
 ## P3 — production operations
 
 - [ ] Device matrix, performance budgets, crash/ANR reporting, privacy review.
 - [ ] Content validation pipeline and localization review.
 - [ ] Secure backup/cloud sync only if product needs it; offline remains first-class.
-- [ ] Myket and Bazaar store adapters, receipt validation, refunds and restore tests.
-- [ ] Rewarded ads with fail-closed reward handling.
+- [ ] Myket and Bazaar consumable coin packs, receipt validation, refunds and restore tests.
+- [ ] Rewarded ads with fail-closed reward handling and server-side verification before currency grant.
 - [ ] Store listing, privacy policy, support workflow, release/rollback checklist.
 
 ## Definition of vertical-slice complete
