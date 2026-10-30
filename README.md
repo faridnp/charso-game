@@ -12,6 +12,9 @@ Current production work includes:
 - A separate pure C# domain core for Persian comparison, puzzle validation, and idempotent reward transactions.
 - EditMode tests for Persian normalization, answer validation, tile selection, and reward invariants.
 - A release quality bar, content bible, QA device matrix, and ordered production backlog.
+- A first procedural Mehrgan city blockout with a central square, covered bazaar, Chahar Bagh garden, residential quarters, civic courtyard, restoration workshop, city gate, and landmark restoration variants.
+- Original runtime-generated UI icons, card depth, world camera touch/mouse exploration, and stage-to-environment integration.
+- Visual direction and Persian RTL text evaluation documents.
 - A trusted Windows self-hosted workflow that runs Unity EditMode tests before producing an Android artifact.
 
 None of those items is a claim that Unity compilation, tests, APK generation, or device QA have already passed. The Unity Editor and runner must execute the project to verify them.
