@@ -52,7 +52,7 @@ namespace Charso.Tests
             const string legacy = "{\"SchemaVersion\":1,\"LevelIndex\":3,\"Coins\":42,\"RestorationStage\":1,\"SolvedLevels\":2,\"CurrentLevelSolved\":true,\"CurrentLevelRestored\":false}";
             Assert.IsTrue(SaveCodec.TryDecode(legacy, out SaveGameData migratedData, out bool migrated));
             Assert.IsTrue(migrated);
-            Assert.AreEqual(2, migratedData.SchemaVersion);
+            Assert.AreEqual(3, migratedData.SchemaVersion);
             Assert.AreEqual(42, migratedData.SoftCurrency);
             Assert.AreEqual(3, migratedData.LevelIndex);
             Assert.IsTrue(migratedData.CurrentLevelSolved);
