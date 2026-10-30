@@ -6,7 +6,7 @@ Preferred path: GitHub-hosted GitHub Actions runner, provided a Unity-supported 
 
 ## Current repository state
 
-The first Unity runtime scaffold now exists on branch `feature/first-playable-mvp`: `Assets/`, `Packages/`, `ProjectSettings/ProjectVersion.txt`, and `Assets/Editor/BuildCommand.cs` are present. The project is pinned to Unity 6000.3.28f1. The Windows workflow is manually triggered and validates the project, exact Editor version, Android module, and build entry point before attempting a build. A skipped or blocked build is not a successful APK build.
+The first Unity runtime scaffold now exists on branch `feature/first-playable-mvp`: `Assets/`, `Packages/`, `ProjectSettings/ProjectVersion.txt`, and `Assets/Editor/BuildCommand.cs` are present. The project is pinned to Unity 6000.3.27f1. The Windows workflow is manually triggered and validates the project, exact Editor version, Android module, and build entry point before attempting a build. A skipped or blocked build is not a successful APK build.
 
 ## Cloud build
 
