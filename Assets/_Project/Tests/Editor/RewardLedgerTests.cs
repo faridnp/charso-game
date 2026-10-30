@@ -23,6 +23,27 @@ namespace Charso.Tests
         }
 
         [Test]
+        public void PuzzleRewardScalesByEditorialDifficulty()
+        {
+            Assert.AreEqual(8, RewardEconomy.PuzzleReward(1));
+            Assert.AreEqual(10, RewardEconomy.PuzzleReward(2));
+            Assert.AreEqual(12, RewardEconomy.PuzzleReward(3));
+            Assert.AreEqual(12, RewardEconomy.PuzzleReward(99));
+        }
+
+        [Test]
+        public void CityProjectCatalogHasUniqueIdsAndPositiveCosts()
+        {
+            var ids = new System.Collections.Generic.HashSet<string>();
+            foreach (CityProjectDefinition project in RewardEconomy.CityProjects)
+            {
+                Assert.IsTrue(ids.Add(project.Id), "Duplicate project: " + project.Id);
+                Assert.Greater(project.CoinCost, 0);
+            }
+            Assert.AreEqual(8, RewardEconomy.CityProjects.Length);
+        }
+
+        [Test]
         public void CannotExceedMaximumBalance()
         {
             var state = new RewardLedgerState { SoftCurrency = 999999 };
