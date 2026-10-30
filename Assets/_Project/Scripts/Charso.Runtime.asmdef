@@ -1,0 +1,8 @@
+{
+  "name": "Charso.Runtime",
+  "rootNamespace": "Charso",
+  "references": [
+    "Charso.Core"
+  ],
+  "autoReferenced": true
+}
