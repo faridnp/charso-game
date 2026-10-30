@@ -13,8 +13,9 @@ Current production work includes:
 - EditMode tests for Persian normalization, answer validation, tile selection, and reward invariants.
 - A release quality bar, content bible, QA device matrix, and ordered production backlog.
 - A first procedural Mehrgan city blockout with a central square, covered bazaar, Chahar Bagh garden, residential quarters, civic courtyard, restoration workshop, city gate, and landmark restoration variants.
-- Original runtime-generated UI icons, card depth, world camera touch/mouse exploration, and stage-to-environment integration.
-- Visual direction and Persian RTL text evaluation documents.
+- A Persian-first runtime HUD built with RTLTMPro and a bundled Vazirmatn font, plus entrance, button, panel and success animations.
+- A live camera-rendered 3D view of Mehrgan inside the chapter card, plus ambient world animation and city restoration states.
+- Visual direction, font licensing and Persian RTL rendering/test documents.
 - A trusted Windows self-hosted workflow that runs Unity EditMode tests before producing an Android artifact.
 
 None of those items is a claim that Unity compilation, tests, APK generation, or device QA have already passed. The Unity Editor and runner must execute the project to verify them.
@@ -53,7 +54,7 @@ None of those items is a claim that Unity compilation, tests, APK generation, or
 
 ## Open and run in Unity
 
-Follow the [Unity Quick Start](docs/UNITY_QUICKSTART.md) for the exact editor version, project import, first-scene generation, Play Mode, and EditMode tests. The first playable scene is generated from the Unity menu: **Charso → Generate First Playable Scene**.
+Follow the [Unity Quick Start](docs/UNITY_QUICKSTART.md) for the exact editor version, project import, direct opening of the included first-playable scene, Play Mode, and EditMode tests. Open `Assets/_Project/Scenes/Charso.unity`; editor shortcuts are **Charso → Open Main Game Scene** and **Charso → Play Main Game**.
 
 ## Development
 
@@ -61,4 +62,4 @@ Unity 6.3 LTS is the selected editor line. The exact patch in ProjectSettings/Pr
 
 ## Verification status
 
-**Not yet verified:** Unity Editor import/compile, EditMode test execution, Android APK build, Persian rendering on devices, performance, store SDK integrations, and release readiness. A green documentation workflow is not a Unity build or a release sign-off.
+**Not yet verified:** Unity Editor import/compile, EditMode test execution, Android APK build, Persian rendering on devices, performance, store SDK integrations, and release readiness. A green source/documentation workflow is not a Unity build or a release sign-off. The new RTL HUD, dynamic TMP font creation, live city camera preview and animations still require Unity compilation and Android device QA.
