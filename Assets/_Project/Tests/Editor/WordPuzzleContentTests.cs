@@ -64,6 +64,8 @@ namespace Charso.Tests
                 projectCosts += project.CoinCost;
             Assert.AreEqual(1770, projectCosts);
             Assert.AreEqual(1890, extendedCoins + (20 * 8));
+            Assert.AreEqual(1860, extendedCoins + (20 * 8) - (3 * 10));
+            Assert.AreEqual(90, extendedCoins + (20 * 8) - (3 * 10) - projectCosts);
         }
 
         [Test]
