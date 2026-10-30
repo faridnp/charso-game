@@ -7,7 +7,7 @@ The player earns the ordinary soft currency by solving puzzles. Currency is spen
 ## Currency and rewards
 
 - Currency display name: سکه مهرگان (soft currency; not cash and not transferable).
-- First 20 tutorial puzzles: 8 coins for each first-time correct solve.
+- First 20 tutorial puzzles: difficulty-scaled first-time rewards (currently 16 easy × 8 coins and 4 medium × 10 coins; 168 coins total before restoration costs).
 - Extended puzzles: 8 / 10 / 12 coins for difficulty 1 / 2 / 3. Difficulty must be calibrated through playtests, not inferred from answer length alone.
 - No repeat-solve farming: one stable reward transaction per puzzle ID and content revision policy.
 - Hints are a spend, not a source of currency. Hint costs and exact hint text must be visible before purchase.
