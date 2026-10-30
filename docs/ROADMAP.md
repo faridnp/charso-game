@@ -4,12 +4,13 @@ This roadmap is milestone-based. Dates are not promised before the Unity baselin
 
 ## Phase 0 — repository and production foundation
 
-**Status: in progress**
+**Status: production foundation in progress; the old bootstrap is prototype-only.**
 
 - [x] Establish repository and project charter.
-- [ ] Agree product scope and provisional names.
+- [x] Agree the core product promise, heritage constraints, and MVP direction.
+- [x] Add release quality bar, content bible, QA matrix, and ordered production backlog.
 - [ ] Create collaborator access and ownership rules.
-- [ ] Record Unity/toolchain decision after a device prototype.
+- [x] Pin Unity 6.3 LTS editor patch for reproducible project import; validate the exact installation and Android toolchain on the trusted runner.
 - [ ] Select the first landmark based on research and usable asset rights.
 - [ ] Define Persian dictionary source and editorial policy.
 - [ ] Create a risk register and initial threat model.
@@ -17,17 +18,21 @@ This roadmap is milestone-based. Dates are not promised before the Unity baselin
 
 **Exit gate:** architecture and toolchain decisions are recorded; no unresolved critical licensing/security blocker exists for the prototype.
 
-## Phase 1 — technical prototype
+## Phase 1 — production core and technical proof
 
-- [ ] Persian text normalization and grapheme/input prototype.
-- [ ] One complete, deterministic word puzzle.
-- [ ] Save/resume and process-kill recovery test.
+- [x] Add an isolated Persian comparison normalizer (display shaping remains separate and not yet solved).
+- [x] Add deterministic puzzle definition validation and accepted-answer engine.
+- [x] Add idempotent local soft-currency ledger rules.
+- [x] Add EditMode test cases for the domain core.
+- [ ] Execute Unity import, compile, and EditMode tests on the pinned Editor.
+- [ ] Integrate the tested domain core into the real gameplay UI and content pipeline.
+- [ ] Replace prototype save with versioned, checksummed, recoverable save repository and migration tests.
 - [ ] One small heritage location with approved reference pack.
 - [ ] Camera/UI prototype with RTL and screen scaling.
 - [ ] Profile CPU, GPU, memory, load time, and thermal behavior on low/mid/high test devices.
 - [ ] Confirm reproducible Unity Android build and device installation.
 
-**Exit gate:** a repeatable prototype runs on the minimum device tier without critical input, save, or performance defects.
+**Exit gate:** automated domain tests pass; the complete tutorial-to-restoration loop is integrated; recovery, Persian rendering, and physical-device performance are verified.
 
 ## Phase 2 — vertical slice
 
