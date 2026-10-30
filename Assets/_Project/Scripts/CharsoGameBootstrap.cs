@@ -108,33 +108,41 @@ namespace Charso
 
             try
             {
-                string[] installed = Font.GetOSInstalledFontNames();
-                var candidates = new List<string>();
-                string[] preferred = {
-                    "Vazirmatn UI", "Vazirmatn", "Noto Sans Arabic UI",
-                    "Noto Naskh Arabic UI", "Noto Sans Arabic", "Noto Naskh Arabic",
-                    "Tahoma", "Segoe UI", "Arial", "Roboto"
-                };
+                // Prefer the project-bundled Vazirmatn font. This avoids depending on which
+                // fonts happen to be installed on Windows, Android or a tablet.
+                Font source = Resources.Load<Font>("Fonts/Vazirmatn-Regular");
 
-                for (int p = 0; p < preferred.Length; p++)
+                // OS font fallback is only a safety net for damaged/missing resource imports.
+                if (source == null)
                 {
-                    for (int i = 0; i < installed.Length; i++)
+                    string[] installed = Font.GetOSInstalledFontNames();
+                    var candidates = new List<string>();
+                    string[] preferred = {
+                        "Vazirmatn UI", "Vazirmatn", "Noto Sans Arabic UI",
+                        "Noto Naskh Arabic UI", "Noto Sans Arabic", "Noto Naskh Arabic",
+                        "Tahoma", "Segoe UI", "Arial", "Roboto"
+                    };
+
+                    for (int p = 0; p < preferred.Length; p++)
                     {
-                        if (installed[i].IndexOf(preferred[p], StringComparison.OrdinalIgnoreCase) >= 0 &&
-                            !candidates.Contains(installed[i]))
+                        for (int i = 0; i < installed.Length; i++)
+                        {
+                            if (installed[i].IndexOf(preferred[p], StringComparison.OrdinalIgnoreCase) >= 0 &&
+                                !candidates.Contains(installed[i]))
+                                candidates.Add(installed[i]);
+                        }
+                    }
+
+                    for (int i = 0; i < installed.Length && candidates.Count < 28; i++)
+                    {
+                        if (!candidates.Contains(installed[i]))
                             candidates.Add(installed[i]);
                     }
-                }
 
-                for (int i = 0; i < installed.Length && candidates.Count < 28; i++)
-                {
-                    if (!candidates.Contains(installed[i]))
-                        candidates.Add(installed[i]);
+                    source = candidates.Count > 0
+                        ? Font.CreateDynamicFontFromOSFont(candidates.ToArray(), 96)
+                        : Font.CreateDynamicFontFromOSFont(new[] { "Arial", "Tahoma", "Roboto" }, 96);
                 }
-
-                Font source = candidates.Count > 0
-                    ? Font.CreateDynamicFontFromOSFont(candidates.ToArray(), 96)
-                    : Font.CreateDynamicFontFromOSFont(new[] { "Arial", "Tahoma", "Roboto" }, 96);
 
                 if (source != null)
                     runtimePersianFont = TMP_FontAsset.CreateFontAsset(source);
