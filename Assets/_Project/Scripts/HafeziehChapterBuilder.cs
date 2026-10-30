@@ -103,14 +103,12 @@ namespace Charso
             }
             Box(p,"Pavilion entablature",center+new Vector3(0,10.2f,0),new Vector3(5.0f,.35f,5.0f),Limestone);
             var dome=CreateDome(p,"Copper ribbed dome",center+new Vector3(0,10.4f,0),2.25f,3.3f,Copper);
-            dome.SetActive(false);
             var tile=Child(p,"Interior tile and inscription accents");
             for(int i=0;i<8;i++)
             {
                 float a=i*Mathf.PI/4f;
                 Box(tile,"Pavilion blue tile panel",center+new Vector3(Mathf.Cos(a)*2.34f,6.8f,Mathf.Sin(a)*2.34f),new Vector3(.65f,1.2f,.08f),BlueTile);
             }
-            tile.gameObject.SetActive(false);
             Cylinder(p,"Memorial platform",center+new Vector3(0,.68f,0),new Vector3(1.55f,.25f,1.55f),PaleStone,32);
             Box(p,"Memorial stone",center+new Vector3(0,.92f,0),new Vector3(1.25f,.22f,1.25f),new Color(.76f,.76f,.72f));
         }
