@@ -27,7 +27,8 @@ This roadmap is milestone-based. Dates are not promised before the Unity baselin
 - [ ] Execute Unity import, compile, and EditMode tests on the pinned Editor.
 - [ ] Integrate the tested domain core into the real gameplay UI and content pipeline.
 - [ ] Replace prototype save with versioned, checksummed, recoverable save repository and migration tests.
-- [ ] One small heritage location with approved reference pack.
+- [x] Research a first candidate (Hafezieh) and create a separate proportional 20-column hall / eight-column pavilion blockout; this is not an approved final reconstruction.
+- [ ] One heritage location with approved measured reference pack and rights clearance.
 - [x] Procedural Mehrgan city blockout with districts, restoration variants, and touch/mouse camera exploration.
 - [x] Original runtime UI icon set and basic HUD visual hierarchy.
 - [ ] Replace legacy UI text with verified Persian shaping and approved embedded font.
