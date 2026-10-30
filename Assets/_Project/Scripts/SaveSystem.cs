@@ -7,7 +7,7 @@ namespace Charso
     [Serializable]
     public sealed class PlayerProgress
     {
-        public int SchemaVersion=2;
+        public int SchemaVersion=3;
         public int LevelIndex;
         public int Coins=20;
         public int RestorationStage;
@@ -16,6 +16,7 @@ namespace Charso
         public bool CurrentLevelRestored;
         public string LastCompletedPuzzleId=string.Empty;
         public string[] AppliedTransactionIds=Array.Empty<string>();
+        public string[] OwnedCityProjectIds=Array.Empty<string>();
     }
 
     public static class SaveSystem
@@ -29,7 +30,7 @@ namespace Charso
             if(migrated)Debug.Log("Charso save migrated to schema v2.");
             return Clean(new PlayerProgress
             {
-                SchemaVersion=2,
+                SchemaVersion=3,
                 LevelIndex=data.LevelIndex,
                 Coins=data.SoftCurrency,
                 RestorationStage=data.RestorationStage,
@@ -37,19 +38,20 @@ namespace Charso
                 CurrentLevelSolved=data.CurrentLevelSolved,
                 CurrentLevelRestored=data.CurrentLevelRestored,
                 LastCompletedPuzzleId=data.LastCompletedPuzzleId,
-                AppliedTransactionIds=data.AppliedTransactionIds
+                AppliedTransactionIds=data.AppliedTransactionIds,
+                OwnedCityProjectIds=data.OwnedCityProjectIds
             });
         }
 
-        public static void Store(PlayerProgress progress)
+        public static bool Store(PlayerProgress progress)
         {
-            if(progress==null)return;
+            if(progress==null)return false;
             Clean(progress);
             try
             {
                 Repository.Save(new SaveGameData
                 {
-                SchemaVersion=2,
+                SchemaVersion=3,
                 LevelIndex=progress.LevelIndex,
                 SoftCurrency=progress.Coins,
                 RestorationStage=progress.RestorationStage,
@@ -57,13 +59,16 @@ namespace Charso
                 CurrentLevelSolved=progress.CurrentLevelSolved,
                 CurrentLevelRestored=progress.CurrentLevelRestored,
                 LastCompletedPuzzleId=progress.LastCompletedPuzzleId,
-                    AppliedTransactionIds=progress.AppliedTransactionIds
+                    AppliedTransactionIds=progress.AppliedTransactionIds,
+                    OwnedCityProjectIds=progress.OwnedCityProjectIds
                 });
             }
             catch(Exception exception)
             {
                 Debug.LogError("Charso save failed: "+exception.Message);
+                return false;
             }
+            return true;
         }
 
         static PlayerProgress Clean(PlayerProgress p)
@@ -72,8 +77,9 @@ namespace Charso
             p.Coins=Mathf.Clamp(p.Coins,0,999999);
             p.RestorationStage=Mathf.Clamp(p.RestorationStage,0,3);
             p.SolvedLevels=Mathf.Clamp(p.SolvedLevels,0,WordPuzzle.Levels.Length);
-            p.SchemaVersion=2;
+            p.SchemaVersion=3;
             if(p.AppliedTransactionIds==null)p.AppliedTransactionIds=Array.Empty<string>();
+            if(p.OwnedCityProjectIds==null)p.OwnedCityProjectIds=Array.Empty<string>();
             if(p.LastCompletedPuzzleId==null)p.LastCompletedPuzzleId=string.Empty;
             return p;
         }
