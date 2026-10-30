@@ -44,7 +44,7 @@ The player earns the ordinary soft currency by solving puzzles. Currency is spen
 | Restore civic courtyard | Paving, arcade and water feature | 300 |
 | Complete landmark chapter | Final approved chapter stages | 350 |
 
-The eight draft project costs total 1,770 coins, leaving a small reserve from the 1,890-coin full-clear path. Costs are balancing hypotheses, not final prices. Every project must have a real, persistent visual state change before it can be sold. Never charge for a capped or already-owned visual stage. The current blockout only has three generic landmark restoration states; the catalog above is not yet integrated into the runtime city and must not be presented as implemented.
+The eight draft project costs total 1,770 coins, leaving a 120-coin reserve from the 1,890-coin full-clear path. The current runtime now includes a local city shop, one-time project ownership, coin deduction, schema-v3 persistence and eight distinct blockout visual groups that activate when a project is purchased. These are prototype balancing costs and blockout visuals, not final prices or final art. Never charge for an already-owned project. Project unlocks and balances remain client-local and are not tamper-proof.
 
 ## Economy sanity checks
 
@@ -61,4 +61,4 @@ The eight draft project costs total 1,770 coins, leaving a small reserve from th
 
 ## Implementation status
 
-This is a design proposal. The existing runtime currently awards 8 local coins per first-time puzzle solve and spends 3 on a hint or 10 at the first three tutorial restoration transitions. There is no rewarded-ad coin grant, paid coin pack, city project shop, server-side account balance, or persistent per-project unlock yet. Unity Editor tests and device verification are pending.
+Implemented locally: first-time puzzle solve rewards are difficulty-based (8/10/12); hints cost 3; the first three tutorial restoration transitions cost 10 each; the city shop spends the configured project cost once and persists ownership in save schema v3; purchased project groups change the Mehrgan blockout. Save v1 raw files and v2 envelopes migrate to v3. Not implemented: rewarded-ad coin grants, Myket/Bazaar coin packs, server-side balance/receipt verification, cloud sync, final art, Unity Editor execution, or device verification. Do not expose paid or ad-granted currency until provider verification and anti-replay backend are implemented.
