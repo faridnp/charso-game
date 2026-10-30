@@ -1,7 +1,8 @@
 {
   "name": "Charso.Core.Tests",
   "references": [
-    "Charso.Core"
+    "Charso.Core",
+    "Charso.Runtime"
   ],
   "optionalUnityReferences": [
     "TestAssemblies"
