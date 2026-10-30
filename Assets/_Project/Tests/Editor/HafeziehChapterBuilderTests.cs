@@ -41,7 +41,7 @@ namespace Charso.Tests
             var root=GameObject.Find("HafeziehChapter").transform;
             Assert.That(root.Find("Eight column tomb pavilion").gameObject.activeSelf,Is.True);
             Assert.That(root.Find("ReconstructionStage_2").gameObject.activeSelf,Is.True);
-            Assert.That(root.Find("Copper ribbed dome"),Is.Null);
+            Assert.That(root.Find("ReconstructionStage_2/Copper ribbed dome").gameObject.activeSelf,Is.True);
         }
     }
 }
