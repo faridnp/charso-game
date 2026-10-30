@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Charso
 {
@@ -7,11 +8,13 @@ namespace Charso
     /// <summary>Small original UI glyphs generated at runtime; no third-party artwork or font glyph dependency.</summary>
     public static class CharsoIconFactory
     {
+        static readonly Dictionary<CharsoIcon,Sprite> Cache=new Dictionary<CharsoIcon,Sprite>();
         static readonly Color Gold = new Color(.94f,.67f,.2f,1);
         static readonly Color Ink = new Color(.12f,.25f,.34f,1);
         static readonly Color Cream = new Color(.98f,.9f,.69f,1);
         public static Sprite Create(CharsoIcon kind)
         {
+            if(Cache.TryGetValue(kind,out var cached))return cached;
             const int size=64;
             var tex=new Texture2D(size,size,TextureFormat.RGBA32,false);
             tex.name="Charso_"+kind;
@@ -62,7 +65,9 @@ namespace Charso
                 if(fill)pixels[y*size+x]=color;
             }
             tex.SetPixels(pixels);tex.Apply(false,true);
-            return Sprite.Create(tex,new Rect(0,0,size,size),new Vector2(.5f,.5f),100);
+            var sprite=Sprite.Create(tex,new Rect(0,0,size,size),new Vector2(.5f,.5f),100);
+            Cache[kind]=sprite;
+            return sprite;
         }
 
         static float DistanceToSegment(float px,float py,float ax,float ay,float bx,float by)
