@@ -21,14 +21,14 @@ namespace Charso.Core
 
         public static readonly CityProjectDefinition[] CityProjects =
         {
-            new CityProjectDefinition { Id = "fountain", DisplayName = "آب‌نمای میدان", CoinCost = 40 },
-            new CityProjectDefinition { Id = "bazaar", DisplayName = "سقف و دکان‌های بازار", CoinCost = 60 },
-            new CityProjectDefinition { Id = "garden", DisplayName = "باغ و آبراهه‌ها", CoinCost = 50 },
-            new CityProjectDefinition { Id = "homes", DisplayName = "نمای خانه‌های محله", CoinCost = 80 },
-            new CityProjectDefinition { Id = "workshop", DisplayName = "کارگاه مرمت", CoinCost = 70 },
-            new CityProjectDefinition { Id = "gate", DisplayName = "دروازه شهر", CoinCost = 100 },
-            new CityProjectDefinition { Id = "courtyard", DisplayName = "حیاط مجموعه", CoinCost = 120 },
-            new CityProjectDefinition { Id = "landmark", DisplayName = "بنای شاخص محله", CoinCost = 150 }
+            new CityProjectDefinition { Id = "fountain", DisplayName = "آب‌نمای میدان", CoinCost = 130 },
+            new CityProjectDefinition { Id = "bazaar", DisplayName = "سقف و دکان‌های بازار", CoinCost = 180 },
+            new CityProjectDefinition { Id = "garden", DisplayName = "باغ و آبراهه‌ها", CoinCost = 160 },
+            new CityProjectDefinition { Id = "homes", DisplayName = "نمای خانه‌های محله", CoinCost = 220 },
+            new CityProjectDefinition { Id = "workshop", DisplayName = "کارگاه مرمت", CoinCost = 180 },
+            new CityProjectDefinition { Id = "gate", DisplayName = "دروازه شهر", CoinCost = 250 },
+            new CityProjectDefinition { Id = "courtyard", DisplayName = "حیاط مجموعه", CoinCost = 300 },
+            new CityProjectDefinition { Id = "landmark", DisplayName = "بنای شاخص محله", CoinCost = 350 }
         };
 
         public static int PuzzleReward(int difficulty)
