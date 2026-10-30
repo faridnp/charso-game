@@ -1,0 +1,67 @@
+name: Charso Android APK (Windows self-hosted)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: charso-android-self-hosted
+  cancel-in-progress: false
+
+jobs:
+  build-android-apk:
+    name: Build APK on the developer PC
+    runs-on: [self-hosted, Windows, X64, charso-unity-android]
+    timeout-minutes: 90
+    steps:
+      - name: Check out trusted repository code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          lfs: true
+
+      - name: Verify Unity installation and project
+        shell: pwsh
+        run: |
+          if (!(Test-Path "ProjectSettings/ProjectVersion.txt") -or !(Test-Path "Assets") -or !(Test-Path "Packages")) {
+            throw "Unity project is not present yet. Expected Assets, Packages, and ProjectSettings/ProjectVersion.txt."
+          }
+
+          $versionLine = Select-String -Path "ProjectSettings/ProjectVersion.txt" -Pattern '^m_EditorVersion:\s*(.+)$' | Select-Object -First 1
+          if (!$versionLine) { throw "Could not read m_EditorVersion from ProjectVersion.txt." }
+          $unityVersion = $versionLine.Matches[0].Groups[1].Value.Trim()
+          $unityExe = Join-Path $env:ProgramFiles "Unity\Hub\Editor\$unityVersion\Editor\Unity.exe"
+
+          if (!(Test-Path $unityExe)) {
+            throw "Unity Editor $unityVersion was not found at $unityExe. Install the exact project Editor version and Android Build Support."
+          }
+          if (!(Test-Path "Assets/Editor/BuildCommand.cs")) {
+            throw "The project build entry point Assets/Editor/BuildCommand.cs has not been added yet."
+          }
+
+          "UNITY_EXE=$unityExe" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
+      - name: Build Android APK
+        shell: pwsh
+        run: |
+          $log = Join-Path $env:GITHUB_WORKSPACE "build-android.log"
+          & "$env:UNITY_EXE" -batchmode -quit -nographics -projectPath "$env:GITHUB_WORKSPACE" -executeMethod Charso.Editor.BuildCommand.BuildAndroidApk -logFile "$log"
+          $unityExit = $LASTEXITCODE
+          if ($unityExit -ne 0) {
+            if (Test-Path $log) { Get-Content $log -Tail 160 }
+            throw "Unity Android build failed with exit code $unityExit."
+          }
+
+          if (!(Test-Path "build/Android/Charso.apk")) {
+            if (Test-Path $log) { Get-Content $log -Tail 160 }
+            throw "Unity exited successfully but build/Android/Charso.apk was not produced."
+          }
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Charso-Android-APK
+          path: build/Android/Charso.apk
+          if-no-files-found: error
+          retention-days: 14
