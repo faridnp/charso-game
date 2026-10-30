@@ -6,7 +6,7 @@ Preferred path: GitHub-hosted GitHub Actions runner, provided a Unity-supported 
 
 ## Current repository state
 
-The repository is still a pre-production foundation. It does not yet contain a runnable Unity project, including `Assets/`, `Packages/`, and `ProjectSettings/ProjectVersion.txt`. The cloud workflow checks for these files and skips its build job until the Unity project exists. The Windows workflow is manually triggered and validates the project, exact Editor version, Android module, and build entry point before attempting a build. A skipped or blocked build is not a successful APK build.
+The first Unity runtime scaffold now exists on branch `feature/first-playable-mvp`: `Assets/`, `Packages/`, `ProjectSettings/ProjectVersion.txt`, and `Assets/Editor/BuildCommand.cs` are present. The project is pinned to Unity 6000.3.28f1. The Windows workflow is manually triggered and validates the project, exact Editor version, Android module, and build entry point before attempting a build. A skipped or blocked build is not a successful APK build.
 
 ## Cloud build
 
@@ -24,9 +24,9 @@ References:
 
 ## Windows self-hosted fallback
 
-The workflow `.github/workflows/android-apk-self-hosted.yml` is restricted to manual dispatch and requires a runner with labels `self-hosted`, `Windows`, `X64`, and `charso-unity-android`. It invokes the exact Unity Editor version declared in `ProjectSettings/ProjectVersion.txt` in batch mode. The project build entry point `Assets/Editor/BuildCommand.cs` will be added with the Unity runtime foundation.
+The workflow `.github/workflows/android-apk-self-hosted.yml` is restricted to manual dispatch and requires a runner with labels `self-hosted`, `Windows`, `X64`, and `charso-unity-android`. It invokes the exact Unity Editor version declared in `ProjectSettings/ProjectVersion.txt` in batch mode. The project build entry point `Assets/Editor/BuildCommand.cs` generates the prototype scene and builds the ARM64 IL2CPP APK.
 
-Setup, once the Unity project version is fixed:
+Setup:
 1. Install that exact Unity Editor version through Unity Hub.
 2. Include Android Build Support, Android SDK & NDK Tools, and OpenJDK.
 3. Activate Unity Personal through Unity Hub on the Windows account that will run the runner.
@@ -45,6 +45,6 @@ After a successful run, download the `Charso-Android-APK` artifact from the GitH
 ## Verification status
 
 - Cloud workflow scaffold committed; no cloud Unity license configured or validated.
-- Windows self-hosted workflow scaffold committed; it cannot run until the Unity project, matching Editor, runner, and build entry point exist.
+- Windows self-hosted workflow and build entry point are committed; build remains pending until the matching Editor, Personal activation, and runner are ready.
 - No Unity compilation or APK build has been run.
 - Android device installation and gameplay QA remain pending.
