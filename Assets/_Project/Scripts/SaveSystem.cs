@@ -27,7 +27,7 @@ namespace Charso
         {
             SaveGameData data=Repository.LoadOrNew(out bool recovered,out bool migrated);
             if(recovered)Debug.LogWarning("Charso save recovered from the last known-good backup.");
-            if(migrated)Debug.Log("Charso save migrated to schema v2.");
+            if(migrated)Debug.Log("Charso save migrated to schema v3.");
             return Clean(new PlayerProgress
             {
                 SchemaVersion=3,
