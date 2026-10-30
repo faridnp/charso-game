@@ -1,0 +1,13 @@
+{
+  "name": "Charso.Core.Tests",
+  "references": [
+    "Charso.Core"
+  ],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "autoReferenced": false
+}
