@@ -26,7 +26,8 @@ This is the ordered implementation plan. Work should proceed through complete ve
 ## P2 — real heritage vertical slice
 
 - [ ] Choose one landmark only after historical and rights review.
-- [ ] Create a sourced research dossier and approved art brief.
+- [x] Create a sourced Hafezieh research dossier and separate proportional chapter blockout (historical and rights approval still pending).
+- [ ] Obtain measured plans, rights-cleared references, and specialist review before final art.
 - [ ] Build a performant, original 3D environment and restoration-stage variants.
 - [ ] Add camera movement, focal framing, environmental ambience, and clear progression feedback.
 - [ ] Add original characters and reviewed story beats.
