@@ -13,16 +13,16 @@ namespace Charso
     {
         static readonly Dictionary<int, Material> Materials = new Dictionary<int, Material>();
         static Transform root;
-        static readonly Color Sand = new Color(.72f,.59f,.42f);
-        static readonly Color LightStone = new Color(.84f,.77f,.64f);
-        static readonly Color DarkStone = new Color(.42f,.34f,.26f);
-        static readonly Color Tile = new Color(.13f,.34f,.48f);
-        static readonly Color TileLight = new Color(.25f,.51f,.61f);
-        static readonly Color Water = new Color(.13f,.39f,.48f);
-        static readonly Color Green = new Color(.22f,.36f,.23f);
-        static readonly Color GreenLight = new Color(.35f,.48f,.29f);
-        static readonly Color Wood = new Color(.32f,.22f,.14f);
-        static readonly Color Plaster = new Color(.91f,.83f,.68f);
+        static readonly Color Sand = new Color32(210,160,101,255);
+        static readonly Color LightStone = new Color32(245,220,178,255);
+        static readonly Color DarkStone = new Color32(111,79,57,255);
+        static readonly Color Tile = new Color32(24,103,135,255);
+        static readonly Color TileLight = new Color32(49,174,185,255);
+        static readonly Color Water = new Color32(38,175,190,255);
+        static readonly Color Green = new Color32(53,119,77,255);
+        static readonly Color GreenLight = new Color32(111,169,91,255);
+        static readonly Color Wood = new Color32(121,73,43,255);
+        static readonly Color Plaster = new Color32(250,236,205,255);
 
         public static void Build(int restorationStage = 0)
         {
@@ -484,10 +484,10 @@ namespace Charso
             if(camera==null) camera=new GameObject("Main Camera",typeof(Camera)).GetComponent<Camera>();
             camera.tag="MainCamera";
             camera.orthographic=true;
-            camera.orthographicSize=36;
+            camera.orthographicSize=33.5f;
             camera.transform.position=new Vector3(28,38,-34);
             camera.transform.rotation=Quaternion.Euler(39,-39,0);
-            camera.backgroundColor=new Color(.55f,.69f,.75f);
+            camera.backgroundColor=new Color32(151,207,221,255);
             camera.clearFlags=CameraClearFlags.SolidColor;
             camera.nearClipPlane=.1f;
             camera.farClipPlane=180;
@@ -495,11 +495,11 @@ namespace Charso
             var light=UnityEngine.Object.FindFirstObjectByType<Light>();
             if(light==null) light=new GameObject("Mehrgan sun",typeof(Light)).GetComponent<Light>();
             light.type=LightType.Directional;
-            light.intensity=1.15f;
+            light.intensity=1.25f;
             light.color=new Color(1.0f,.91f,.77f);
             light.transform.rotation=Quaternion.Euler(48,-32,0);
             RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight=new Color(.62f,.59f,.52f);
+            RenderSettings.ambientLight=new Color32(183,177,157,255);
         }
 
         static Transform Child(Transform parent,string name)
