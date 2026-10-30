@@ -18,17 +18,17 @@ The project currently uses Unity UGUI and Unity Test Framework packages from `Pa
 5. When Hub asks for an Editor, choose Unity `6000.3.27f1`. Do not upgrade the project to Unity 7 Alpha for this first run.
 6. Let Unity finish package resolution and script compilation. Open Window → General → Console and check for red errors before continuing.
 
-## Generate and play the first scene
+## Open and play the included first scene
 
-The repository intentionally generates the main scene from an Editor command rather than keeping a pre-generated scene in the source tree.
+The repository already contains the first playable scene at `Assets/_Project/Scenes/Charso.unity`; you do not need to generate it manually or use a custom menu item.
 
-1. In the Unity Editor top menu, select **Charso → Generate First Playable Scene**.
-2. The command creates and saves `Assets/_Project/Scenes/Charso.unity` and adds the `CharsoGameBootstrap` component to a `CharsoGame` object.
-3. In the Project window, open `Assets/_Project/Scenes/Charso.unity`.
-4. Press the **Play** triangle at the top of Unity.
-5. The game creates its Mehrgan city blockout and Persian puzzle UI at runtime. Select the letter tiles in order, press **بررسی پاسخ**, and use **بازار شهر** to open the local restoration shop. Camera exploration supports mouse drag/scroll in the Editor and touch gestures on devices.
+1. In the Project panel, expand `Assets` → `_Project` → `Scenes`.
+2. Double-click `Charso.unity`. The Hierarchy should show a `CharsoGame` object.
+3. Confirm the Console has no red errors.
+4. Press the **Play** triangle. The bootstrap creates the Mehrgan city blockout, Persian puzzle interface, coin balance, restoration progress and city shop at runtime.
+5. Select the letter tiles in order, press `بررسی پاسخ`, and use `بازار شهر` to open the local restoration shop. Camera exploration supports mouse drag/scroll in the Editor and touch gestures on devices.
 
-To generate the separate Hafezieh research blockout, use **Charso → Generate Hafezieh Research Blockout**. It is a research scene, not the main Mehrgan gameplay scene.
+The separate Hafezieh research blockout can still be generated from `Charso → Generate Hafezieh Research Blockout`. It is a research scene, not the main Mehrgan gameplay scene.
 
 ## Run the automated tests
 
