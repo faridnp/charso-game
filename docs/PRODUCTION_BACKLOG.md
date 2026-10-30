@@ -13,7 +13,7 @@ This is the ordered implementation plan. Work should proceed through complete ve
 
 ## P1 — polished core game loop
 
-- [ ] Proper Persian text system and approved font/license.
+- [ ] Proper Persian text system and approved font/license (candidate evaluation documented in `RTL_TEXT_PIPELINE.md`; current UGUI text remains a blocker).
 - [ ] Navigation/state machine: boot, onboarding, home, district, puzzle, reward, restoration, settings, pause.
 - [ ] Data-driven puzzle and hint definitions.
 - [ ] Deterministic puzzle engine with accepted answers and duplicate protection.
