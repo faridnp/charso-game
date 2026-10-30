@@ -187,8 +187,18 @@ namespace Charso
             for(int i=0;i<16;i++)
             {
                 float a=i*Mathf.PI*2f/16f;
-                var rib=Cylinder(g.transform,"Dome copper rib",new Vector3(Mathf.Cos(a)*radius*.5f,height*.38f,Mathf.Sin(a)*radius*.5f),new Vector3(.035f,height*.9f,.035f),new Color(.68f,.46f,.26f),8);
-                rib.transform.localRotation=Quaternion.Euler(0,0,Mathf.Cos(a)*12f);
+                var ribObject=new GameObject("Dome copper rib");
+                ribObject.transform.SetParent(g.transform,false);
+                var rib=ribObject.AddComponent<LineRenderer>();
+                rib.useWorldSpace=false;rib.positionCount=9;rib.startWidth=.055f;rib.endWidth=.025f;
+                rib.numCapVertices=2;rib.alignment=LineAlignment.View;rib.sharedMaterial=Mat(new Color(.68f,.46f,.26f));
+                for(int j=0;j<=8;j++)
+                {
+                    float theta=(float)j/8f*Mathf.PI*.5f;
+                    float rr=Mathf.Cos(theta)*radius*1.012f;
+                    float yy=Mathf.Sin(theta)*height*1.012f;
+                    rib.SetPosition(j,new Vector3(Mathf.Cos(a)*rr,yy,Mathf.Sin(a)*rr));
+                }
             }
             return g;
         }
