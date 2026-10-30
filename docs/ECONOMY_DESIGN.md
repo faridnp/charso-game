@@ -44,11 +44,11 @@ The player earns the ordinary soft currency by solving puzzles. Currency is spen
 | Restore civic courtyard | Paving, arcade and water feature | 300 |
 | Complete landmark chapter | Final approved chapter stages | 350 |
 
-The eight draft project costs total 1,770 coins, leaving 90 coins after the three 10-coin tutorial restoration payments (1,860 coins net from the 1,890-coin full-clear path), before any hints. The current runtime now includes a local city shop, one-time project ownership, coin deduction, schema-v3 persistence and eight distinct blockout visual groups that activate when a project is purchased. These are prototype balancing costs and blockout visuals, not final prices or final art. Never charge for an already-owned project. Project unlocks and balances remain client-local and are not tamper-proof.
+The eight draft project costs total 1,770 coins. The 220-puzzle bank awards 1,898 coins at the current authored difficulty mix; after the three 10-coin tutorial restoration payments, 1,868 remain, leaving a 98-coin reserve before hints. The current runtime now includes a local city shop, one-time project ownership, coin deduction, schema-v3 persistence and eight distinct blockout visual groups that activate when a project is purchased. These are prototype balancing costs and blockout visuals, not final prices or final art. Never charge for an already-owned project. Project unlocks and balances remain client-local and are not tamper-proof.
 
 ## Economy sanity checks
 
-- The current 200-puzzle draft bank awards 1,730 coins at its authored difficulty mix (143 easy × 8, 49 medium × 10, 8 hard × 12), before hints. The 20 opening puzzles add 160 coins, for 1,890 total across all 220.
+- The current 200-puzzle draft bank awards 1,730 coins at its authored difficulty mix (143 easy × 8, 49 medium × 10, 8 hard × 12), before hints. The 20 opening puzzles add 168 coins (16 easy and 4 medium), for 1,898 total across all 220.
 - At the proposed ad cap, ads add at most 60 coins per server day.
 - The coin sources and sinks must be simulated across a full chapter before locking prices. Measure time-to-first-project, time-to-each-project, unused balance, hint usage and ad opt-in rate.
 - Do not tune the economy to pressure players into watching ads or paying. Ensure a free-play path exists for every core progression gate.
