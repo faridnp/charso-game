@@ -34,6 +34,26 @@ namespace Charso.Core
                     if (envelope.FormatVersion != 1 || string.IsNullOrEmpty(envelope.Checksum)) return false;
                     string expected = Crc32.Compute(Encoding.UTF8.GetBytes(envelope.Payload)).ToString("X8");
                     if (!string.Equals(expected, envelope.Checksum, StringComparison.OrdinalIgnoreCase)) return false;
+                    LegacySaveV2 previous = JsonUtility.FromJson<LegacySaveV2>(envelope.Payload);
+                    if (previous == null) return false;
+                    if (previous.SchemaVersion == 2)
+                    {
+                        data = new SaveGameData
+                        {
+                            SchemaVersion = 3,
+                            LevelIndex = previous.LevelIndex,
+                            SoftCurrency = previous.SoftCurrency,
+                            RestorationStage = previous.RestorationStage,
+                            SolvedLevels = previous.SolvedLevels,
+                            CurrentLevelSolved = previous.CurrentLevelSolved,
+                            CurrentLevelRestored = previous.CurrentLevelRestored,
+                            LastCompletedPuzzleId = previous.LastCompletedPuzzleId,
+                            AppliedTransactionIds = previous.AppliedTransactionIds
+                        };
+                        migrated = true;
+                        Sanitize(data);
+                        return true;
+                    }
                     data = JsonUtility.FromJson<SaveGameData>(envelope.Payload);
                     if (data == null || data.SchemaVersion != 3) { data = null; return false; }
                     Sanitize(data);
@@ -44,7 +64,7 @@ namespace Charso.Core
                 if (legacy == null || legacy.SchemaVersion != 1) return false;
                 data = new SaveGameData
                 {
-                    SchemaVersion = 2,
+                    SchemaVersion = 3,
                     LevelIndex = legacy.LevelIndex,
                     SoftCurrency = legacy.Coins,
                     RestorationStage = legacy.RestorationStage,
