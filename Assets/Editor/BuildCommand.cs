@@ -11,6 +11,20 @@ namespace Charso.Editor {
   const string ScenePath="Assets/_Project/Scenes/Charso.unity",OutputPath="build/Android/Charso.apk";
   [MenuItem("Charso/Generate First Playable Scene")]
   public static void GeneratePlayableScene(){Directory.CreateDirectory("Assets/_Project/Scenes");var s=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);new GameObject("CharsoGame").AddComponent<CharsoGameBootstrap>();EditorSceneManager.SaveScene(s,ScenePath);AssetDatabase.Refresh();Debug.Log("Charso scene generated: "+ScenePath);}
+  [MenuItem("Charso/Open Main Game Scene")]
+  public static void OpenMainGameScene()
+  {
+   Directory.CreateDirectory("Assets/_Project/Scenes");
+   if(!File.Exists(ScenePath))GeneratePlayableScene();
+   AssetDatabase.Refresh();
+   EditorSceneManager.OpenScene(ScenePath,OpenSceneMode.Single);
+  }
+  [MenuItem("Charso/Play Main Game")]
+  public static void PlayMainGame()
+  {
+   OpenMainGameScene();
+   EditorApplication.isPlaying=true;
+  }
   [MenuItem("Charso/Generate Hafezieh Research Blockout")]
   public static void GenerateHafeziehResearchScene(){Directory.CreateDirectory("Assets/_Project/Scenes");var s=EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);new GameObject("HafeziehSceneBootstrap").AddComponent<HafeziehChapterSceneBootstrap>();EditorSceneManager.SaveScene(s,"Assets/_Project/Scenes/HafeziehResearch.unity");AssetDatabase.Refresh();Debug.Log("Hafezieh research blockout scene generated.");}
   public static void BuildAndroidApk(){if(EditorApplication.isCompiling)throw new Exception("Scripts are still compiling.");GeneratePlayableScene();EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Android,BuildTarget.Android);PlayerSettings.companyName="FaridNP Studio";PlayerSettings.productName="Charso";PlayerSettings.applicationIdentifier="ir.faridnp.charso";PlayerSettings.bundleVersion="0.1.0";PlayerSettings.Android.bundleVersionCode=1;PlayerSettings.defaultInterfaceOrientation=UIOrientation.Portrait;PlayerSettings.Android.minSdkVersion=AndroidSdkVersions.AndroidApiLevel25;PlayerSettings.Android.targetArchitectures=AndroidArchitecture.ARMv7|AndroidArchitecture.ARM64;PlayerSettings.SetScriptingBackend(UnityEditor.Build.NamedBuildTarget.Android,ScriptingImplementation.IL2CPP);Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));var o=new BuildPlayerOptions{scenes=new[]{ScenePath},locationPathName=OutputPath,target=BuildTarget.Android,options=BuildOptions.None};BuildReport r=BuildPipeline.BuildPlayer(o);if(r.summary.result!=BuildResult.Succeeded)throw new Exception("Android build failed: "+r.summary.result+" errors="+r.summary.totalErrors);Debug.Log("CHARSO_APK_BUILD_SUCCESS "+Path.GetFullPath(OutputPath));}
