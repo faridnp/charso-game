@@ -25,6 +25,8 @@ REQUIRED_FILES = (
     "docs/QA_DEVICE_MATRIX.md",
     "docs/PRODUCTION_BACKLOG.md",
     "docs/SECURITY_THREAT_MODEL.md",
+    "docs/ART_DIRECTION.md",
+    "docs/RTL_TEXT_PIPELINE.md",
     ".github/CODEOWNERS",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/workflows/quality-gates.yml",
