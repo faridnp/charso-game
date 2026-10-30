@@ -63,9 +63,13 @@ namespace Charso.Tests
             foreach (CityProjectDefinition project in RewardEconomy.CityProjects)
                 projectCosts += project.CoinCost;
             Assert.AreEqual(1770, projectCosts);
-            Assert.AreEqual(1890, extendedCoins + (20 * 8));
-            Assert.AreEqual(1860, extendedCoins + (20 * 8) - (3 * 10));
-            Assert.AreEqual(90, extendedCoins + (20 * 8) - (3 * 10) - projectCosts);
+            int openingCoins = 0;
+            for (int i = 0; i < 20; i++)
+                openingCoins += RewardEconomy.PuzzleReward(WordPuzzle.Levels[i].Difficulty);
+            int fullClearCoins = extendedCoins + openingCoins;
+            Assert.AreEqual(1898, fullClearCoins);
+            Assert.AreEqual(1868, fullClearCoins - (3 * 10));
+            Assert.AreEqual(98, fullClearCoins - (3 * 10) - projectCosts);
         }
 
         [Test]
