@@ -44,7 +44,7 @@ No Unity editor version, SDK, billing SDK, backend, or third-party asset is cons
 - Do not commit secrets, signing keys, keystores, service-role keys, private purchase tokens, or production credentials.
 - Do not commit generated Unity folders such as Library, Temp, Obj, Build, or local IDE state.
 
-Start here: [Architecture](docs/ARCHITECTURE.md) · [Game Design](docs/GAME_DESIGN.md) · [Roadmap](docs/ROADMAP.md) · [Heritage Asset Pipeline](docs/HERITAGE_ASSET_PIPELINE.md) · [Module Ownership](docs/MODULE_OWNERSHIP.md) · [Decision Log](docs/DECISIONS.md) · [AI Workflow](AI_WORKFLOW.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md).
+Start here: [Architecture](docs/ARCHITECTURE.md) · [Game Design](docs/GAME_DESIGN.md) · [Roadmap](docs/ROADMAP.md) · [Heritage Asset Pipeline](docs/HERITAGE_ASSET_PIPELINE.md) · [Module Ownership](docs/MODULE_OWNERSHIP.md) · [Decision Log](docs/DECISIONS.md) · [AI Workflow](AI_WORKFLOW.md) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md) · [Android Build Pipeline](docs/BUILD_PIPELINE.md).
 
 ## Current phase
 
