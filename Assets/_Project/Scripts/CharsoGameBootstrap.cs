@@ -5,11 +5,11 @@ namespace Charso {
  public sealed class CharsoGameBootstrap:MonoBehaviour {
   PlayerProgress p; readonly List<int> picks=new List<int>(); readonly List<Button> letterButtons=new List<Button>();
   Text coins,clue,answer,status,stage; Transform letters; Button submit,hint,restore,next; int solvedIndex=-1; bool restored;
-  void Awake(){Application.targetFrameRate=60;p=SaveSystem.Load();solvedIndex=p.CurrentLevelSolved?p.LevelIndex:-1;restored=p.CurrentLevelRestored;BuildUI();Refresh();}
+  void Awake(){Application.targetFrameRate=60;MehrganWorldBuilder.Build();p=SaveSystem.Load();solvedIndex=p.CurrentLevelSolved?p.LevelIndex:-1;restored=p.CurrentLevelRestored;BuildUI();Refresh();}
   void BuildUI(){
    var c=new GameObject("Canvas",typeof(Canvas),typeof(CanvasScaler),typeof(GraphicRaycaster)).GetComponent<Canvas>();c.renderMode=RenderMode.ScreenSpaceOverlay;
    var sc=c.GetComponent<CanvasScaler>();sc.uiScaleMode=CanvasScaler.ScaleMode.ScaleWithScreenSize;sc.referenceResolution=new Vector2(720,1280);sc.matchWidthOrHeight=.5f;
-   var bg=Panel(c.transform,"BG",new Color32(239,245,250,255));Stretch(bg.GetComponent<RectTransform>());
+   var bg=Panel(c.transform,"BG",new Color32(239,245,250,55));Stretch(bg.GetComponent<RectTransform>());
    var title=Label(c.transform,"چهارسو",54,new Color32(22,65,105,255));Place(title.rectTransform,.06f,.88f,.94f,.97f);
    var sub=Label(c.transform,"ماجرای واژه‌ها و میراث ایران",24,new Color32(73,104,132,255));Place(sub.rectTransform,.06f,.83f,.94f,.89f);
    var stats=Panel(c.transform,"Stats",Color.white);Place(stats.GetComponent<RectTransform>(),.07f,.755f,.93f,.82f);
