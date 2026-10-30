@@ -245,7 +245,7 @@ namespace Charso
         static void SetupCamera()
         {
             var cam=Camera.main;if(cam==null)cam=new GameObject("Main Camera",typeof(Camera)).GetComponent<Camera>();
-            cam.tag="MainCamera";cam.orthographic=true;cam.orthographicSize=17f;
+            cam.tag="MainCamera";cam.orthographic=true;cam.orthographicSize=23.5f;
             cam.transform.position=new Vector3(20,25,-22);cam.transform.rotation=Quaternion.Euler(42,-40,0);
             cam.backgroundColor=new Color(.62f,.74f,.78f);cam.clearFlags=CameraClearFlags.SolidColor;
             var explorer=cam.GetComponent<MehrganCameraController>();if(explorer!=null)explorer.enabled=false;
