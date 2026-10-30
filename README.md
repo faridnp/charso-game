@@ -46,6 +46,7 @@ None of those items is a claim that Unity compilation, tests, APK generation, or
 - [Game design](docs/GAME_DESIGN.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Heritage asset pipeline](docs/HERITAGE_ASSET_PIPELINE.md)
+- [Hafezieh research dossier](docs/HERITAGE_RESEARCH/HAFEZIEH.md)
 - [Android build pipeline](docs/BUILD_PIPELINE.md)
 - [Security threat model](docs/SECURITY_THREAT_MODEL.md)
 - [Engine and Android delivery decision](docs/DECISIONS/0001-engine-and-android-delivery.md)
