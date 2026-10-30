@@ -6,7 +6,7 @@
 - 8 coins awarded for a correct answer.
 - A three-step conceptual restoration progression for Hafezieh, Shiraz; each step costs 10 coins.
 - Local JSON progress save with schema version 1.
-- Editor menu command to generate the scene and a batch build entry point for Android ARM64.
+- Editor menu command to generate the scene and a batch build entry point for Android ARMv7 and ARM64.
 
 ## Important limitations
 - This prototype uses Unity legacy UI Text and a built-in Arial font. Persian glyph shaping, bidirectional order, font fallback, and mixed digit behavior are not production-verified. A proper Persian shaping/RTL text solution and licensed font are required before release.
