@@ -24,6 +24,7 @@ REQUIRED_FILES = (
     "docs/CONTENT_BIBLE.md",
     "docs/QA_DEVICE_MATRIX.md",
     "docs/PRODUCTION_BACKLOG.md",
+    "scripts/validate_puzzles.py",
     "docs/SECURITY_THREAT_MODEL.md",
     "docs/ART_DIRECTION.md",
     "docs/RTL_TEXT_PIPELINE.md",
