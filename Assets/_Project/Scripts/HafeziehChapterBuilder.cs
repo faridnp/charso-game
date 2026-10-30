@@ -41,6 +41,8 @@ namespace Charso
             stage=Mathf.Clamp(stage,0,3);
             var root=GameObject.Find("HafeziehChapter");
             if(root==null)return;
+            var pavilion=root.transform.Find("Eight column tomb pavilion");
+            if(pavilion!=null)pavilion.gameObject.SetActive(stage>=1);
             for(int i=0;i<4;i++)
             {
                 var t=root.transform.Find("ReconstructionStage_"+i);
@@ -51,18 +53,18 @@ namespace Charso
         static void BuildTwentyColumnHall(Transform root)
         {
             var hall=Child(root,"Twenty column hall — 56m reference");
-            Box(hall,"Hall floor",new Vector3(0,.12f,0),new Vector3(20.2f,.24f,3.1f),PaleStone);
-            Box(hall,"Hall roof",new Vector3(0,2.0f,0),new Vector3(20.5f,.32f,3.45f),Limestone);
-            Box(hall,"Hall blue frieze",new Vector3(0,1.77f,-1.7f),new Vector3(20.4f,.22f,.12f),BlueTile);
+            Box(hall,"Hall floor",new Vector3(0,.12f,0),new Vector3(56f,.24f,8f),PaleStone);
+            Box(hall,"Hall roof",new Vector3(0,5.2f,0),new Vector3(57f,.32f,9.4f),Limestone);
+            Box(hall,"Hall blue frieze",new Vector3(0,4.9f,-4.65f),new Vector3(56.5f,.22f,.12f),BlueTile);
             for(int i=0;i<10;i++)
             {
-                float x=-9.2f+i*(18.4f/9f);
+                float x=-25.2f+i*(50.4f/9f);
                 for(int side=-1;side<=1;side+=2)
                 {
-                    Vector3 at=new Vector3(x,.98f,side*1.22f);
-                    Cylinder(hall,"Hall stone column",at,new Vector3(.25f,1.72f,.25f),PaleStone,20);
-                    Cylinder(hall,"Hall column base",at+new Vector3(0,-.78f,0),new Vector3(.42f,.16f,.42f),Limestone,20);
-                    Cylinder(hall,"Hall column capital",at+new Vector3(0,.83f,0),new Vector3(.42f,.2f,.42f),Limestone,20);
+                    Vector3 at=new Vector3(x,2.5f,side*3.1f);
+                    Cylinder(hall,"Hall stone column",at,new Vector3(.25f,2.5f,.25f),PaleStone,20);
+                    Cylinder(hall,"Hall column base",at+new Vector3(0,-2.38f,0),new Vector3(.42f,.16f,.42f),Limestone,20);
+                    Cylinder(hall,"Hall column capital",at+new Vector3(0,2.38f,0),new Vector3(.42f,.2f,.42f),Limestone,20);
                 }
             }
             // Source describes four retained Zand-period columns and sixteen added columns.
@@ -95,18 +97,18 @@ namespace Charso
             for(int i=0;i<8;i++)
             {
                 float a=i*Mathf.PI/4f;
-                Vector3 pos=center+new Vector3(Mathf.Cos(a)*2.05f,1.85f,Mathf.Sin(a)*2.05f);
-                Cylinder(p,"Tomb pavilion column",pos,new Vector3(.3f,3.1f,.3f),PaleStone,20);
-                Cylinder(p,"Tomb column capital",pos+new Vector3(0,1.52f,0),new Vector3(.5f,.18f,.5f),Limestone,20);
+                Vector3 pos=center+new Vector3(Mathf.Cos(a)*2.05f,5.0f,Mathf.Sin(a)*2.05f);
+                Cylinder(p,"Tomb pavilion column",pos,new Vector3(.3f,5.0f,.3f),PaleStone,20);
+                Cylinder(p,"Tomb column capital",pos+new Vector3(0,4.85f,0),new Vector3(.5f,.18f,.5f),Limestone,20);
             }
-            Box(p,"Pavilion entablature",center+new Vector3(0,3.55f,0),new Vector3(5.0f,.35f,5.0f),Limestone);
-            var dome=CreateDome(p,"Copper ribbed dome",center+new Vector3(0,3.72f,0),2.25f,1.65f,Copper);
+            Box(p,"Pavilion entablature",center+new Vector3(0,10.2f,0),new Vector3(5.0f,.35f,5.0f),Limestone);
+            var dome=CreateDome(p,"Copper ribbed dome",center+new Vector3(0,10.4f,0),2.25f,3.3f,Copper);
             dome.SetActive(false);
             var tile=Child(p,"Interior tile and inscription accents");
             for(int i=0;i<8;i++)
             {
                 float a=i*Mathf.PI/4f;
-                Box(tile,"Pavilion blue tile panel",center+new Vector3(Mathf.Cos(a)*2.34f,2.25f,Mathf.Sin(a)*2.34f),new Vector3(.65f,1.2f,.08f),BlueTile);
+                Box(tile,"Pavilion blue tile panel",center+new Vector3(Mathf.Cos(a)*2.34f,6.8f,Mathf.Sin(a)*2.34f),new Vector3(.65f,1.2f,.08f),BlueTile);
             }
             tile.gameObject.SetActive(false);
             Cylinder(p,"Memorial platform",center+new Vector3(0,.68f,0),new Vector3(1.55f,.25f,1.55f),PaleStone,32);
@@ -140,10 +142,10 @@ namespace Charso
 
         static void BuildStageDetails(Transform root)
         {
-            var stage0=Child(root,"ReconstructionStage_0");
+            var pavilion=root.Find("Eight column tomb pavilion");\n            if(pavilion!=null)pavilion.gameObject.SetActive(false);\n            var stage0=Child(root,"ReconstructionStage_0");
             Box(stage0,"Survey base plan",new Vector3(0,.04f,12),new Vector3(8,.08f,7),new Color(.56f,.5f,.4f));
             var stage1=Child(root,"ReconstructionStage_1");
-            Box(stage1,"Tomb pavilion temporary roof frame",new Vector3(0,3.8f,12),new Vector3(4.8f,.16f,4.8f),Wood);
+            Box(stage1,"Tomb pavilion temporary roof frame",new Vector3(0,10.8f,12),new Vector3(4.8f,.16f,4.8f),Wood);
             var stage2=Child(root,"ReconstructionStage_2");
             var dome=GameObject.Find("Copper ribbed dome");
             if(dome!=null)dome.transform.SetParent(stage2,false);
