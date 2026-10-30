@@ -411,6 +411,7 @@ namespace Charso
             camera.clearFlags=CameraClearFlags.SolidColor;
             camera.nearClipPlane=.1f;
             camera.farClipPlane=180;
+            if(camera.GetComponent<MehrganCameraController>()==null)camera.gameObject.AddComponent<MehrganCameraController>();
             var light=UnityEngine.Object.FindObjectOfType<Light>();
             if(light==null) light=new GameObject("Mehrgan sun",typeof(Light)).GetComponent<Light>();
             light.type=LightType.Directional;
