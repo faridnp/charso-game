@@ -48,6 +48,7 @@ namespace Charso
         static Sprite circleSprite;
         static Sprite whiteSprite;
         static Sprite backgroundSprite;
+        RenderTexture cityPreviewTexture;
 
         static readonly Color Ink = new Color32(25, 48, 70, 255);
         static readonly Color MutedInk = new Color32(91, 113, 132, 255);
@@ -213,7 +214,7 @@ namespace Charso
             var glow = Shape(hero.transform, "Sky glow", 0.00f, 0.0f, 0.68f, 1f,
                 new Color32(56, 148, 163, 92), true);
             glow.GetComponent<Image>().sprite = CircleSprite();
-            AddCityIllustration(hero.transform);
+            AddLiveCityViewport(hero.transform);
 
             var chapterTag = Panel(hero.transform, "Chapter tag", new Color32(255, 255, 255, 34), 0.61f, 0.72f, 0.94f, 0.91f);
             var tagText = Label(chapterTag.transform, "فصل اول  •  مهرگان", 18, new Color32(255, 232, 183, 255), TextAlignmentOptions.Center, true);
@@ -232,47 +233,66 @@ namespace Charso
             AddFloat(sparkle2, 3.4f, 2.2f);
         }
 
-        void AddCityIllustration(Transform parent)
+        void AddLiveCityViewport(Transform parent)
         {
-            // Original stylized Persian skyline, drawn from lightweight UI shapes.
-            Shape(parent, "Cloud left", 0.07f, 0.68f, 0.25f, 0.79f, new Color32(221, 247, 245, 220), true);
-            Shape(parent, "Cloud right", 0.30f, 0.75f, 0.45f, 0.84f, new Color32(221, 247, 245, 210), true);
-
-            Shape(parent, "City ground", 0.035f, 0.06f, 0.60f, 0.17f, new Color32(15, 105, 108, 255), false);
-
-            Shape(parent, "West building", 0.055f, 0.16f, 0.19f, 0.53f, new Color32(239, 186, 119, 255), false);
-            Shape(parent, "West building roof", 0.07f, 0.48f, 0.175f, 0.59f, new Color32(204, 119, 76, 255), true);
-            Shape(parent, "West window 1", 0.085f, 0.29f, 0.12f, 0.37f, new Color32(35, 128, 148, 255), true);
-            Shape(parent, "West window 2", 0.14f, 0.29f, 0.175f, 0.37f, new Color32(35, 128, 148, 255), true);
-
-            Shape(parent, "Bazaar building", 0.20f, 0.17f, 0.39f, 0.48f, new Color32(244, 214, 164, 255), false);
-            Shape(parent, "Bazaar dome", 0.245f, 0.41f, 0.35f, 0.59f, new Color32(40, 151, 159, 255), true);
-            Shape(parent, "Bazaar door", 0.275f, 0.17f, 0.32f, 0.32f, new Color32(126, 74, 54, 255), true);
-            Shape(parent, "Bazaar window", 0.34f, 0.27f, 0.375f, 0.35f, new Color32(35, 128, 148, 255), true);
-
-            Shape(parent, "East tower", 0.405f, 0.17f, 0.48f, 0.57f, new Color32(248, 226, 185, 255), false);
-            Shape(parent, "East tower cap", 0.415f, 0.53f, 0.47f, 0.64f, new Color32(43, 149, 157, 255), true);
-            Shape(parent, "East tower band", 0.395f, 0.43f, 0.49f, 0.47f, new Color32(243, 187, 84, 255), false);
-            Shape(parent, "East tower window", 0.43f, 0.29f, 0.46f, 0.39f, new Color32(35, 128, 148, 255), true);
-
-            Shape(parent, "Minaret base", 0.485f, 0.17f, 0.525f, 0.59f, new Color32(244, 220, 181, 255), false);
-            Shape(parent, "Minaret balcony", 0.47f, 0.48f, 0.54f, 0.52f, new Color32(33, 144, 153, 255), true);
-            Shape(parent, "Minaret crown", 0.49f, 0.55f, 0.52f, 0.67f, new Color32(252, 209, 125, 255), true);
-
-            var domeFloat = Shape(parent, "Floating dome highlight", 0.295f, 0.49f, 0.32f, 0.54f,
-                new Color32(178, 229, 215, 230), true);
-            AddFloat(domeFloat, 1.8f, 1.3f);
-
-            for (int i = 0; i < 5; i++)
+            // Show the real 3D Mehrgan scene inside the chapter card instead of a flat placeholder.
+            Camera cityCamera = Camera.main;
+            if (cityCamera == null)
             {
-                float x = 0.075f + i * 0.095f;
-                Shape(parent, "Garden tree " + i, x, 0.12f, x + 0.055f, 0.23f,
-                    i % 2 == 0 ? new Color32(93, 177, 120, 255) : new Color32(118, 192, 128, 255), true);
+                Debug.LogError("Charso city preview could not find the main world camera.");
+                return;
             }
 
-            var cloudMotion = Shape(parent, "Floating cloud", 0.34f, 0.81f, 0.43f, 0.86f,
-                new Color32(255, 255, 255, 205), true);
-            AddFloat(cloudMotion, 1.2f, 4f);
+            cityPreviewTexture = new RenderTexture(720, 440, 16, RenderTextureFormat.ARGB32);
+            cityPreviewTexture.name = "Charso Mehrgan Live View";
+            cityPreviewTexture.antiAliasing = 2;
+            cityPreviewTexture.filterMode = FilterMode.Bilinear;
+            cityPreviewTexture.Create();
+
+            cityCamera.targetTexture = cityPreviewTexture;
+            cityCamera.orthographic = true;
+            cityCamera.orthographicSize = 22f;
+            cityCamera.clearFlags = CameraClearFlags.SolidColor;
+            cityCamera.backgroundColor = new Color32(150, 205, 221, 255);
+
+            var viewport = Panel(parent, "Live 3D Mehrgan viewport",
+                new Color32(25, 73, 91, 255), 0.035f, 0.075f, 0.585f, 0.91f);
+            viewport.AddComponent<RectMask2D>();
+
+            var rawObject = new GameObject("Rendered Mehrgan city", typeof(RectTransform),
+                typeof(CanvasRenderer), typeof(RawImage));
+            rawObject.transform.SetParent(viewport.transform, false);
+            var rawRect = rawObject.GetComponent<RectTransform>();
+            Stretch(rawRect);
+
+            var raw = rawObject.GetComponent<RawImage>();
+            raw.texture = cityPreviewTexture;
+            raw.color = Color.white;
+            raw.raycastTarget = false;
+
+            var shade = Panel(viewport.transform, "Live view lower shade",
+                new Color32(8, 39, 53, 80), 0f, 0f, 1f, 0.19f);
+            var caption = Label(shade.transform, "مهرگان  •  نمای زنده شهر", 15,
+                Color.white, TextAlignmentOptions.Center, true);
+            Stretch(caption.rectTransform);
+
+            var liveDot = Shape(viewport.transform, "Live city indicator",
+                0.055f, 0.875f, 0.095f, 0.925f, new Color32(102, 225, 168, 255), true);
+            AddFloat(liveDot, 1.5f, 1.6f);
+        }
+
+        void OnDestroy()
+        {
+            if (cityPreviewTexture != null)
+            {
+                Camera cityCamera = Camera.main;
+                if (cityCamera != null && cityCamera.targetTexture == cityPreviewTexture)
+                    cityCamera.targetTexture = null;
+
+                cityPreviewTexture.Release();
+                Destroy(cityPreviewTexture);
+                cityPreviewTexture = null;
+            }
         }
 
         void BuildProgressStrip()
@@ -863,7 +883,7 @@ namespace Charso
             text.raycastTarget = false;
             text.Farsi = true;
             text.PreserveNumbers = true;
-            text.ForceFix = true;
+            text.ForceFix = false;
             text.FixTags = true;
             if (bold)
                 text.fontStyle = FontStyles.Bold;
