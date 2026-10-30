@@ -61,11 +61,11 @@ namespace Charso
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static void EnsureGameStartsFromAnEmptyScene()
         {
-            if (Object.FindFirstObjectByType<CharsoGameBootstrap>() != null)
+            if (UnityEngine.Object.FindFirstObjectByType<CharsoGameBootstrap>() != null)
                 return;
 
             // A separate heritage research scene must remain independent from the main game.
-            if (Object.FindFirstObjectByType<HafeziehChapterSceneBootstrap>() != null)
+            if (UnityEngine.Object.FindFirstObjectByType<HafeziehChapterSceneBootstrap>() != null)
                 return;
 
             var entry = new GameObject("CharsoGame - Automatic Entry");
@@ -174,7 +174,9 @@ namespace Charso
 
             BuildHeader();
             BuildHeroCard();
+            BuildProgressStrip();
             BuildPuzzleCard();
+            BuildStatusBanner();
             BuildBottomNavigation();
             BuildCityShopPanel();
             AddEntranceAnimation(canvasObject);
@@ -273,9 +275,47 @@ namespace Charso
             AddFloat(cloudMotion, 1.2f, 4f);
         }
 
+        void BuildProgressStrip()
+        {
+            var strip = Panel(safeRoot, "City progress strip", new Color32(255, 255, 255, 236),
+                0.04f, 0.642f, 0.96f, 0.68f);
+
+            stageLabel = Label(strip.transform, "پیشرفت شهر ۰ از ۳", 18, Teal, TextAlignmentOptions.Right, true);
+            Place(stageLabel.rectTransform, 0.56f, 0.08f, 0.96f, 0.92f);
+
+            var track = Panel(strip.transform, "Progress track", new Color32(225, 235, 241, 255),
+                0.34f, 0.34f, 0.55f, 0.66f);
+            var fillObject = MakeImage(track.transform, "Progress fill", RoundedSprite(), Teal);
+            fillObject.type = Image.Type.Filled;
+            fillObject.fillMethod = Image.FillMethod.Horizontal;
+            fillObject.fillOrigin = (int)Image.OriginHorizontal.Left;
+            Place(fillObject.rectTransform, 0f, 0f, 1f, 1f);
+            progressFill = fillObject;
+
+            restoreButton = Button(strip.transform, "بازسازی  •  ۱۰ سکه", new Color32(255, 235, 190, 255),
+                new Color32(122, 78, 24, 255), 16, true);
+            Place(restoreButton.GetComponent<RectTransform>(), 0.035f, 0.05f, 0.31f, 0.95f);
+            restoreButton.onClick.AddListener(RestoreCity);
+            restoreButton.gameObject.SetActive(false);
+
+            nextButton = Button(strip.transform, "مرحله بعد  ←", Teal, Color.white, 16, true);
+            Place(nextButton.GetComponent<RectTransform>(), 0.035f, 0.05f, 0.31f, 0.95f);
+            nextButton.onClick.AddListener(GoToNextPuzzle);
+            nextButton.gameObject.SetActive(false);
+        }
+
+        void BuildStatusBanner()
+        {
+            var statusSurface = Panel(safeRoot, "Status banner", new Color32(255, 255, 255, 195),
+                0.07f, 0.132f, 0.93f, 0.193f);
+            statusLabel = Label(statusSurface.transform, "سرنخ را بخوان و حروف را بچین.", 17,
+                MutedInk, TextAlignmentOptions.Center);
+            Stretch(statusLabel.rectTransform);
+        }
+
         void BuildPuzzleCard()
         {
-            var puzzle = Panel(safeRoot, "Puzzle card", Paper, 0.04f, 0.205f, 0.96f, 0.665f);
+            var puzzle = Panel(safeRoot, "Puzzle card", Paper, 0.04f, 0.205f, 0.96f, 0.632f);
             AddShadow(puzzle, 0.12f, -6f);
 
             var heading = Label(puzzle.transform, "معمای امروز", 27, Ink, TextAlignmentOptions.Right, true);
@@ -468,6 +508,7 @@ namespace Charso
             bool milestone = WordPuzzle.RequiresRestoration(progress.LevelIndex);
             submitButton.interactable = !solved;
             hintButton.interactable = !solved && progress.Coins >= 3;
+            stageLabel.text = "پیشرفت شهر  " + PersianNumber(progress.RestorationStage) + " از ۳";
             restoreButton.gameObject.SetActive(solved && milestone && !restored);
             restoreButton.interactable = progress.Coins >= 10;
             nextButton.gameObject.SetActive(solved && restored && progress.LevelIndex < WordPuzzle.Levels.Length - 1);
@@ -885,7 +926,7 @@ namespace Charso
             Place(rect, x0, y0, x1, y1);
             var image = go.GetComponent<Image>();
             image.sprite = circle ? CircleSprite() : RoundedSprite();
-            image.type = Image.Type.Sliced;
+            image.type = circle ? Image.Type.Simple : Image.Type.Sliced;
             image.color = color;
             image.raycastTarget = false;
             return rect;
