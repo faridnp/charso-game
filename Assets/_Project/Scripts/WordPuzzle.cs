@@ -40,9 +40,9 @@ namespace Charso {
    all.AddRange(WordPuzzleExtendedContent.Create());
    return all.ToArray();
   }
-  // The first four restoration milestones map to the four authored tutorial states.
+  // The first three restoration milestones map to the three visual transitions from the unrepaired state.
   // Later puzzle rewards accumulate for the city-project economy; they do not charge for a capped visual stage.
-  public static bool RequiresRestoration(int levelIndex) => levelIndex >= 0 && levelIndex < 20 && (levelIndex + 1) % 5 == 0;
+  public static bool RequiresRestoration(int levelIndex) => levelIndex >= 0 && levelIndex < 15 && (levelIndex + 1) % 5 == 0;
   public static string Normalize(string s) { if(string.IsNullOrEmpty(s)) return ""; return s.Replace('ي','ی').Replace('ى','ی').Replace('ك','ک').Replace("\u0640","").Replace("\u200c","").Replace("\u200f","").Replace("\u064b","").Replace("\u064c","").Replace("\u064d","").Replace("\u064e","").Replace("\u064f","").Replace("\u0650","").Trim(); }
   public static bool IsCorrect(PuzzleLevel l,string guess)=>l!=null&&Normalize(l.Answer)==Normalize(guess);
  }
