@@ -119,6 +119,16 @@ def check_persian_presentation(errors: list[str]) -> None:
         errors.append("Vendored RTLTMPro source must compile inside Charso.Runtime, not require a remote assembly.")
 
     bootstrap = bootstrap_path.read_text(encoding="utf-8")
+    if "AddShape(" in bootstrap:
+        errors.append("Charso HUD calls missing AddShape helper; use the implemented Shape helper.")
+    if "coinIcon.rectTransform" in bootstrap:
+        errors.append("coinIcon is already a RectTransform; do not access coinIcon.rectTransform.")
+    if "enableWordWrapping" in bootstrap:
+        errors.append("Use TMP_Text.textWrappingMode instead of obsolete enableWordWrapping.")
+    if "text.textWrappingMode = TextWrappingModes.Normal;" not in bootstrap:
+        errors.append("Charso HUD must explicitly configure the current TextMeshPro wrapping mode.")
+    if "static RectTransform Shape(" not in bootstrap:
+        errors.append("Charso HUD Shape helper is missing.")
     required_runtime_markers = (
         "RTLTextMeshPro",
         'Resources.Load<Font>("Fonts/Vazirmatn-Regular")',
