@@ -198,7 +198,7 @@ namespace Charso
 
             var mark = Shape(header.transform, "Brand mark", 0.885f, 0.19f, 0.97f, 0.81f,
                 new Color32(25, 132, 139, 255), true);
-            AddShape(header.transform, "Brand star", 0.912f, 0.39f, 0.944f, 0.69f, Gold, true);
+            Shape(header.transform, "Brand star", 0.912f, 0.39f, 0.944f, 0.69f, Gold, true);
 
             var title = Label(header.transform, "چهارسو", 38, Ink, TextAlignmentOptions.Right, true);
             Place(title.rectTransform, 0.55f, 0.42f, 0.87f, 0.92f);
@@ -208,10 +208,10 @@ namespace Charso
 
             var coinPill = Panel(header.transform, "Coin balance", new Color32(255, 246, 221, 255), 0.035f, 0.16f, 0.42f, 0.84f);
             var coinIcon = Shape(coinPill.transform, "Coin icon", 0.79f, 0.18f, 0.98f, 0.82f, Gold, true);
-            AddShape(coinPill.transform, "Coin glint", 0.84f, 0.58f, 0.89f, 0.76f, new Color32(255, 250, 218, 255), true);
+            Shape(coinPill.transform, "Coin glint", 0.84f, 0.58f, 0.89f, 0.76f, new Color32(255, 250, 218, 255), true);
             coinsLabel = Label(coinPill.transform, "۰ سکه", 23, new Color32(130, 88, 26, 255), TextAlignmentOptions.Center, true);
             Place(coinsLabel.rectTransform, 0.05f, 0.04f, 0.78f, 0.96f);
-            AddFloat(coinIcon.rectTransform, 2f, 1.7f);
+            AddFloat(coinIcon, 2f, 1.7f);
         }
 
         void BuildHeroCard()
@@ -886,7 +886,7 @@ namespace Charso
             text.enableAutoSizing = true;
             text.fontSizeMin = Mathf.Max(12, size * 0.72f);
             text.fontSizeMax = size;
-            text.enableWordWrapping = true;
+            text.textWrappingMode = TextWrappingModes.Normal;
             text.overflowMode = TextOverflowModes.Ellipsis;
             text.raycastTarget = false;
             text.Farsi = true;
