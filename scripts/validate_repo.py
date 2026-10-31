@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -11,6 +12,25 @@ ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = (
     "README.md",
+    "Assets/_Project/Scenes/Charso.unity",
+    "Assets/_Project/Scenes/Charso.unity.meta",
+    "Assets/_Project/Scripts/CharsoGameBootstrap.cs.meta",
+    "Assets/_Project/Resources/Fonts/Vazirmatn-Regular.ttf",
+    "Assets/_Project/Scripts/RTLTMPro/RTLTextMeshPro.cs",
+    "Assets/_Project/Scripts/RTLTMPro/GlyphFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/Char32Utils.cs",
+    "Assets/_Project/Scripts/RTLTMPro/FastStringBuilder.cs",
+    "Assets/_Project/Scripts/RTLTMPro/GlyphTable.cs",
+    "Assets/_Project/Scripts/RTLTMPro/LigatureFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/RTLSupport.cs",
+    "Assets/_Project/Scripts/RTLTMPro/RTLTextMeshPro3D.cs",
+    "Assets/_Project/Scripts/RTLTMPro/RichTextFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/TashkeelFixer.cs",
+    "Assets/_Project/Scripts/RTLTMPro/TashkeelLocation.cs",
+    "Assets/_Project/Scripts/RTLTMPro/TextUtils.cs",
+    "Assets/_Project/Scripts/RTLTMPro/LICENSE.txt",
+    "THIRD_PARTY_NOTICES.md",
+    "ProjectSettings/EditorBuildSettings.asset",
     "AI_WORKFLOW.md",
     "CONTRIBUTING.md",
     "SECURITY.md",
@@ -20,6 +40,15 @@ REQUIRED_FILES = (
     "docs/HERITAGE_ASSET_PIPELINE.md",
     "docs/MODULE_OWNERSHIP.md",
     "docs/DECISIONS.md",
+    "docs/RELEASE_QUALITY_BAR.md",
+    "docs/CONTENT_BIBLE.md",
+    "docs/QA_DEVICE_MATRIX.md",
+    "docs/PRODUCTION_BACKLOG.md",
+    "scripts/validate_puzzles.py",
+    "docs/SECURITY_THREAT_MODEL.md",
+    "docs/ART_DIRECTION.md",
+    "docs/RTL_TEXT_PIPELINE.md",
+    "docs/HERITAGE_RESEARCH/HAFEZIEH.md",
     ".github/CODEOWNERS",
     ".github/PULL_REQUEST_TEMPLATE.md",
     ".github/workflows/quality-gates.yml",
@@ -39,6 +68,94 @@ def check_required_files(errors: list[str]) -> None:
     for relative in REQUIRED_FILES:
         if not (ROOT / relative).is_file():
             errors.append(f"Missing required file: {relative}")
+
+
+
+def check_playable_scene(errors: list[str]) -> None:
+    scene_path = ROOT / "Assets/_Project/Scenes/Charso.unity"
+    scene_meta_path = ROOT / "Assets/_Project/Scenes/Charso.unity.meta"
+    bootstrap_meta_path = ROOT / "Assets/_Project/Scripts/CharsoGameBootstrap.cs.meta"
+    build_settings_path = ROOT / "ProjectSettings/EditorBuildSettings.asset"
+    if not all(p.is_file() for p in (scene_path, scene_meta_path, bootstrap_meta_path, build_settings_path)):
+        return
+    scene = scene_path.read_text(encoding="utf-8")
+    scene_meta = scene_meta_path.read_text(encoding="utf-8")
+    bootstrap_meta = bootstrap_meta_path.read_text(encoding="utf-8")
+    build_settings = build_settings_path.read_text(encoding="utf-8")
+    scene_guid_match = re.search(r"(?m)^guid: ([0-9a-f]{32})$", scene_meta)
+    bootstrap_guid_match = re.search(r"(?m)^guid: ([0-9a-f]{32})$", bootstrap_meta)
+    if not scene_guid_match or scene_guid_match.group(1) not in build_settings:
+        errors.append("Playable scene GUID is missing from EditorBuildSettings.asset.")
+    if not bootstrap_guid_match or f"guid: {bootstrap_guid_match.group(1)}" not in scene:
+        errors.append("Playable scene does not reference CharsoGameBootstrap.cs.")
+    if "m_Name: CharsoGame" not in scene:
+        errors.append("Playable scene is missing the CharsoGame bootstrap object.")
+
+
+
+def check_persian_presentation(errors: list[str]) -> None:
+    manifest_path = ROOT / "Packages/manifest.json"
+    asmdef_path = ROOT / "Assets/_Project/Scripts/Charso.Runtime.asmdef"
+    bootstrap_path = ROOT / "Assets/_Project/Scripts/CharsoGameBootstrap.cs"
+    font_path = ROOT / "Assets/_Project/Resources/Fonts/Vazirmatn-Regular.ttf"
+    rtl_license_path = ROOT / "Assets/_Project/Scripts/RTLTMPro/LICENSE.txt"
+    font_notice_path = ROOT / "THIRD_PARTY_NOTICES.md"
+
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        asmdef = json.loads(asmdef_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        errors.append(f"Cannot inspect presentation package configuration: {error}")
+        return
+
+    dependencies = manifest.get("dependencies", {})
+    if "com.unity.textmeshpro" not in dependencies:
+        errors.append("TextMeshPro package is missing from Packages/manifest.json.")
+    if "com.nosuchstudio.rtltmpro" in dependencies:
+        errors.append("RTLTMPro must be vendored in Assets; do not require a remote Git package clone.")
+    if "Unity.TextMeshPro" not in asmdef.get("references", []):
+        errors.append("Charso.Runtime must reference Unity.TextMeshPro.")
+    if "RTLTMPro" in asmdef.get("references", []):
+        errors.append("Vendored RTLTMPro source must compile inside Charso.Runtime, not require a remote assembly.")
+
+    bootstrap = bootstrap_path.read_text(encoding="utf-8")
+    if "AddShape(" in bootstrap:
+        errors.append("Charso HUD calls missing AddShape helper; use the implemented Shape helper.")
+    if "coinIcon.rectTransform" in bootstrap:
+        errors.append("coinIcon is already a RectTransform; do not access coinIcon.rectTransform.")
+    if "enableWordWrapping" in bootstrap:
+        errors.append("Use TMP_Text.textWrappingMode instead of obsolete enableWordWrapping.")
+    if "text.textWrappingMode = TextWrappingModes.Normal;" not in bootstrap:
+        errors.append("Charso HUD must explicitly configure the current TextMeshPro wrapping mode.")
+    if "static RectTransform Shape(" not in bootstrap:
+        errors.append("Charso HUD Shape helper is missing.")
+    required_runtime_markers = (
+        "RTLTextMeshPro",
+        'Resources.Load<Font>("Fonts/Vazirmatn-Regular")',
+        "TMP_FontAsset.CreateFontAsset",
+        "AddLiveCityViewport",
+        "RenderTexture",
+        "CharsoCanvasEntrance",
+        "CharsoButtonMotion",
+        "CharsoPanelMotion",
+        "CharsoConfettiBurst",
+        "EnsureGameStartsFromAnEmptyScene",
+    )
+    for marker in required_runtime_markers:
+        if marker not in bootstrap:
+            errors.append(f"Persian presentation/runtime feature is missing: {marker}")
+
+    if "UnityEngine.UI.Text" in bootstrap or 'LegacyRuntime.ttf' in bootstrap:
+        errors.append("Legacy UGUI Text must not be used for the Persian-first HUD.")
+    if "text.ForceFix = true" in bootstrap:
+        errors.append("RTLTMPro must not force-reverse English-only text; use automatic RTL detection.")
+
+    if font_path.is_file() and font_path.stat().st_size < 100_000:
+        errors.append("Bundled Vazirmatn font file is unexpectedly small.")
+    if rtl_license_path.is_file() and "MIT License" not in rtl_license_path.read_text(encoding="utf-8"):
+        errors.append("Vendored RTLTMPro MIT license notice is missing or incomplete.")
+    if font_notice_path.is_file() and "SIL OPEN FONT LICENSE" not in font_notice_path.read_text(encoding="utf-8").upper():
+        errors.append("Vazirmatn SIL OFL 1.1 notice is missing.")
 
 
 def check_markdown_links(errors: list[str]) -> None:
@@ -85,6 +202,8 @@ def check_text_safety(errors: list[str]) -> None:
 def main() -> int:
     errors: list[str] = []
     check_required_files(errors)
+    check_playable_scene(errors)
+    check_persian_presentation(errors)
     check_markdown_links(errors)
     check_text_safety(errors)
 

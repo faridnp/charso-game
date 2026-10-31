@@ -42,6 +42,19 @@ jobs:
 
           "UNITY_EXE=$unityExe" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
 
+      - name: Run Unity EditMode tests
+        shell: pwsh
+        run: |
+          $testLog = Join-Path $env:GITHUB_WORKSPACE "unity-tests.log"
+          $testResults = Join-Path $env:GITHUB_WORKSPACE "test-results.xml"
+          & "$env:UNITY_EXE" -batchmode -nographics -projectPath "$env:GITHUB_WORKSPACE" -runTests -testPlatform EditMode -testResults "$testResults" -logFile "$testLog"
+          $testExit = $LASTEXITCODE
+          if ($testExit -ne 0) {
+            if (Test-Path $testLog) { Get-Content $testLog -Tail 200 }
+            throw "Unity EditMode tests failed with exit code $testExit."
+          }
+          if (!(Test-Path $testResults)) { throw "Unity test results XML was not produced." }
+
       - name: Build Android APK
         shell: pwsh
         run: |
@@ -62,6 +75,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Charso-Android-APK
-          path: build/Android/Charso.apk
+          path: |
+            build/Android/Charso.apk
+            test-results.xml
+            unity-tests.log
+            build-android.log
           if-no-files-found: error
           retention-days: 14

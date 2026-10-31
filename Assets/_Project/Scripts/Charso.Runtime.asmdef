@@ -1,0 +1,9 @@
+{
+  "name": "Charso.Runtime",
+  "rootNamespace": "Charso",
+  "references": [
+    "Charso.Core",
+    "Unity.TextMeshPro"
+  ],
+  "autoReferenced": true
+}
