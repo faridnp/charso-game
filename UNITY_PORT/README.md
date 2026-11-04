@@ -14,7 +14,7 @@ There is **no Web Mobile target** in this plan. Android and Web Desktop have sep
 - Gameplay friend: `UnityProject/Assets/ParsehNo/Gameplay/Domain/`.
 - Shared boundary: `UnityProject/Assets/ParsehNo/Contracts/`.
 
-The full first Unity workspace is distributed separately as `ParsehNo_2100_Unity_0.1.0_FOUNDATION.zip`. This Git branch initially holds the collaboration boundary and handoff documents; it is not yet the complete binary-asset upload. GLB files and textures must be committed from the downloaded workspace using Git / GitHub Desktop.
+The full Unity workspace is distributed as `ParsehNo_2100_Unity_0.1.0_FOUNDATION.zip`. After extracting it, run `Tools/Push-To-GitHub-Branches.bat` with Git for Windows authenticated; it pushes the full UnityProject, GLB assets, textures and tooling to all three prepared branches. It refuses to overwrite an existing UnityProject and never force-pushes.
 
 ## Current state
 The current Unity work is a **presentation foundation**, not a full gameplay port. The temporary visual sandbox only tests rendering and placement. It must not invent prices, taxes, income or treasury effects.
