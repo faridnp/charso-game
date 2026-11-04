@@ -48,4 +48,4 @@ See the Architecture, Game Design, Roadmap, AI Workflow, Contributing, and Secur
 
 ## Current phase
 
-**Phase 0 — foundation and technical validation.** This repository currently contains planning and engineering standards only. A runnable Unity game, Android build, store integration, backend, or performance claim does not exist yet.
+**Unity migration foundation 0.1.0 — in progress.** The current source baseline is `ParsehNo_2100_v0.9.2_RealChanges.zip`. The Unity 6.3.27f1 workspace is under `UnityProject/` after the prepared push helper is run. The target outputs are Android Native (APK/AAB) and Web Desktop only; Web Mobile is explicitly out of scope. This is a presentation and project-structure foundation, not yet a complete gameplay port. Unity Editor compilation, platform builds and device QA must be verified before release. See `UnityProject/Documentation/PROJECT_SPLIT_AND_OWNERSHIP_FA.md` and `UnityProject/Documentation/GITHUB_WORKSTREAMS_FA.md`.
