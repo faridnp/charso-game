@@ -9,3 +9,6 @@
 There is no mobile-browser build.
 
 Both outputs share the same Unity scenes, contracts, domain logic and GLB assets. Platform-specific input and quality profiles must be selected at runtime or build time without forking gameplay rules.
+
+
+Release signing: Android AAB generation requires a private custom keystore configured in Unity Player Settings. Never commit the keystore or passwords.
